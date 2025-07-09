@@ -8,17 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- New week-based calculation formula for office day requirements: `(A - B) * 0.60`
-  - A = Total business days in month using week assignment rules
-  - B = Holidays and PTO days on business days
-  - Week assignment based on where first/last day of month falls within the week
-  - First week belongs to month if month starts on Mon/Tue/Wed, otherwise previous month
-  - Last week belongs to month if month ends on Wed/Thu/Fri/Sat/Sun, otherwise next month
-  - Each assigned week contributes exactly 5 business days to the month
+- Nothing yet
 
 ### Changed
-- Office day calculation now uses precise week-based business day counting instead of calendar day counting
-- Required office days now calculated as 60% of adjusted business days
+- Nothing yet
 
 ### Deprecated
 - Nothing yet
@@ -31,6 +24,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 - Nothing yet
+
+## [1.0.3] - 2025-07-09
+
+### Added
+- New week-based calculation formula for office day requirements: `(A - B) * 0.60`
+  - A = Total business days in month using week assignment rules
+  - B = Holidays and PTO days on business days
+  - Week assignment based on where first/last day of month falls within the week
+  - First week belongs to month if month starts on Mon/Tue/Wed, otherwise previous month
+  - Last week belongs to month if month ends on Wed/Thu/Fri/Sat/Sun, otherwise next month
+  - Each assigned week contributes exactly 5 business days to the month
+
+### Changed
+- Office day calculation now uses precise week-based business day counting instead of calendar day counting
+- Required office days now calculated as 60% of adjusted business days
 
 ## [1.0.1] - 2025-07-09
 
