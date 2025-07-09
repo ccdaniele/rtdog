@@ -25,6 +25,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Nothing yet
 
+## [1.0.9] - 2025-07-09
+
+### Added
+- **Dedicated Notification Settings UI**: New standalone notification settings view accessible via orange button in main UI
+- **Prominent Notifications Button**: Orange "Notifications" button with distinct styling in main UI for easy access
+- **Comprehensive Notification Information**: Added detailed explanations about notification functionality and usage
+- **Enhanced Testing Tools**: Organized debugging and testing tools in dedicated section
+- **Improved Button Organization**: Restructured main UI header with better button layout and styling
+
+### Fixed
+- **Notification Actions Now Update Calendar**: Fixed critical issue where notification banner actions weren't updating day status by implementing WorkDayManager singleton pattern
+- **UI Layout Issues**: Removed problematic NavigationView that caused two-column layout problems
+- **Settings Organization**: Separated notification settings from general settings for better user experience
+
+### Changed
+- **Main UI Structure**: Removed NavigationView wrapper and restructured layout for cleaner, single-column design
+- **WorkDayManager Architecture**: Converted to singleton pattern (`WorkDayManager.shared`) to ensure data consistency across app and notifications
+- **Settings Separation**: Moved all notification-related settings to dedicated view, leaving general settings focused on core app configuration
+- **Button Styling**: Enhanced button organization and visual hierarchy in main UI
+
+### Technical
+- Implemented singleton pattern for WorkDayManager to fix notification action handling
+- Created dedicated NotificationSettingsView with comprehensive controls and information
+- Improved UI architecture by removing NavigationView complexity
+- Enhanced notification system reliability with shared data model
+
 ## [1.0.8] - 2025-07-09
 
 ### Added
