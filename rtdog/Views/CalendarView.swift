@@ -86,6 +86,12 @@ struct CalendarView: View {
                 }
             }
             .padding(.horizontal)
+            
+            // Clear Days button section (moved below calendar)
+            if !isInClearMode {
+                clearDaysButtonSection
+                    .padding(.top, 16)
+            }
         }
         .confirmationDialog(dialogTitle, isPresented: $showingActionSheet) {
             Button("Work From Office") {
@@ -149,12 +155,6 @@ struct CalendarView: View {
                     }
                     .font(.caption)
                     .foregroundColor(.accentColor)
-                    
-                    Button("Clear Days") {
-                        enterClearMode()
-                    }
-                    .font(.caption)
-                    .foregroundColor(.red)
                 }
             }
             
@@ -211,6 +211,42 @@ struct CalendarView: View {
         .background(Color.gray.opacity(0.1))
     }
     
+    // MARK: - Clear Days Button Section
+    
+    @ViewBuilder
+    private var clearDaysButtonSection: some View {
+        VStack(spacing: 8) {
+            Button(action: enterClearMode) {
+                HStack {
+                    Image(systemName: "trash.circle.fill")
+                        .font(.title3)
+                    Text("Clear Days")
+                        .font(.headline)
+                        .fontWeight(.semibold)
+                }
+                .foregroundColor(.white)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 12)
+                .background(
+                    LinearGradient(
+                        gradient: Gradient(colors: [Color.red, Color.red.opacity(0.8)]),
+                        startPoint: .leading,
+                        endPoint: .trailing
+                    )
+                )
+                .cornerRadius(12)
+                .shadow(color: Color.red.opacity(0.3), radius: 4, x: 0, y: 2)
+            }
+            .buttonStyle(PlainButtonStyle())
+            
+            Text("Select multiple days to clear their work status and PTO")
+                .font(.caption)
+                .foregroundColor(.secondary)
+                .multilineTextAlignment(.center)
+        }
+        .padding(.horizontal)
+    }
+    
     // MARK: - Clear Mode Functions
     
     private func enterClearMode() {
@@ -233,7 +269,15 @@ struct CalendarView: View {
     
     private func clearSelectedDays() {
         for date in selectedDatesForClearing {
+            let workDay = workDayManager.getWorkDay(for: date)
+            
+            // Clear work status
             workDayManager.setWorkDay(date: date, status: .unlogged)
+            
+            // Clear PTO if it's set
+            if workDay.isPTO {
+                workDayManager.togglePTO(for: date)
+            }
         }
         exitClearMode()
     }
