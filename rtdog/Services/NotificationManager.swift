@@ -49,7 +49,7 @@ class NotificationManager: ObservableObject {
     
     private func scheduleNotificationsInternal(for settings: AppSettings, remainingDays: Int) {
         let content = UNMutableNotificationContent()
-        content.title = "Office Day Tracker"
+        content.title = "rtdog"
         content.body = "Please log your work location for today. You have \(remainingDays) office days left this month."
         content.sound = UNNotificationSound.default
         
@@ -122,7 +122,7 @@ class NotificationManager: ObservableObject {
     func testNotification() {
         // Schedule a test notification for 5 seconds from now
         let content = UNMutableNotificationContent()
-        content.title = "Test Notification"
+        content.title = "rtdog - Test Notification"
         content.body = "This is a test notification from rtdog"
         content.sound = UNNotificationSound.default
         

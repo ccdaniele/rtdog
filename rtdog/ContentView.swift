@@ -19,11 +19,11 @@ struct ContentView: View {
                 // Header
                 HStack {
                     VStack(alignment: .leading) {
-                        Text("Office Day Tracker")
+                        Text("rtdog")
                             .font(.largeTitle)
                             .fontWeight(.bold)
                         
-                        Text("Track your hybrid work schedule")
+                        Text("Track your hybrid work schedule - Don't forget the office is still there")
                             .font(.subheadline)
                             .foregroundColor(.secondary)
                     }
@@ -76,6 +76,20 @@ struct ContentView: View {
                 .padding(.horizontal)
                 
                 Spacer()
+                
+                // Disclaimer at the bottom
+                VStack(spacing: 8) {
+                    Text("**Disclaimer:** This application is a personal initiative by Datadog employees and is not an official Datadog product. Its sole purpose is to help you conscientiously track your in-office days and ensure good-faith compliance with RTO KPIs. This tool is explicitly not for \"gaming\" or cheating the system.")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                        .multilineTextAlignment(.center)
+                        .padding(.horizontal, 40)
+                        .padding(.bottom, 8)
+                }
+                .background(Color.gray.opacity(0.05))
+                .cornerRadius(8)
+                .padding(.horizontal)
+                .padding(.bottom, 16)
             }
             .background(Color(NSColor.windowBackgroundColor))
             .toolbar {
