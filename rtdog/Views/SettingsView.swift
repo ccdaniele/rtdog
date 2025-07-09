@@ -58,11 +58,23 @@ struct SettingsView: View {
                                 // Test notification button
                                 HStack {
                                     Spacer()
+                                    Button("Debug Notifications") {
+                                        NotificationManager.shared.debugNotificationStatus()
+                                    }
+                                    .buttonStyle(BorderedButtonStyle())
+                                    .help("Check notification permissions and system status")
+                                    
                                     Button("Test Notification") {
                                         NotificationManager.shared.testNotification()
                                     }
                                     .buttonStyle(BorderedButtonStyle())
-                                    .help("Send a test notification in 5 seconds")
+                                    .help("Send a test notification in 2 seconds")
+                                    
+                                    Button("Test Scheduled") {
+                                        NotificationManager.shared.testScheduledNotification()
+                                    }
+                                    .buttonStyle(BorderedButtonStyle())
+                                    .help("Schedule a test notification for next minute")
                                 }
                             }
                         }

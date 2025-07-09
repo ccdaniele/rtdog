@@ -6,6 +6,8 @@
 //
 
 import SwiftUI
+import AppKit
+import UserNotifications
 
 struct ContentView: View {
     @StateObject private var workDayManager = WorkDayManager()
@@ -125,11 +127,68 @@ struct ContentView: View {
     }
     
     private func setupNotifications() {
-        print("🚀 Setting up notifications...")
+        NSLog("🚀 Setting up notifications...")
         
-        // Request permission first
-        NotificationManager.shared.requestNotificationPermission()
+        // Check current permission status first
+        UNUserNotificationCenter.current().getNotificationSettings { settings in
+            DispatchQueue.main.async {
+                switch settings.authorizationStatus {
+                case .notDetermined:
+                    // First time - request permission
+                    NSLog("📱 First time - requesting notification permission")
+                    NotificationManager.shared.requestNotificationPermission()
+                    
+                case .denied:
+                    // Show user-friendly dialog to enable manually
+                    NSLog("📱 Notifications denied - showing user guidance")
+                    self.showNotificationPermissionDialog()
+                    
+                case .authorized:
+                    // All good - schedule notifications
+                    NSLog("📱 Notifications authorized - scheduling")
+                    self.scheduleNotificationsIfEnabled()
+                    
+                case .provisional, .ephemeral:
+                    // Limited permissions - try to upgrade
+                    NSLog("📱 Limited permissions - requesting full access")
+                    NotificationManager.shared.requestNotificationPermission()
+                    
+                @unknown default:
+                    NSLog("📱 Unknown permission status - requesting")
+                    NotificationManager.shared.requestNotificationPermission()
+                }
+            }
+        }
+    }
+    
+    private func showNotificationPermissionDialog() {
+        let alert = NSAlert()
+        alert.messageText = "Enable Notifications for rtdog"
+        alert.informativeText = """
+        To receive reminders to log your work location, please enable notifications:
         
+        1. Open System Preferences
+        2. Go to Notifications & Focus
+        3. Find "rtdog" in the sidebar
+        4. Turn ON "Allow Notifications"
+        5. Set delivery to "Alerts"
+        
+        Would you like to open System Preferences now?
+        """
+        alert.alertStyle = .informational
+        alert.addButton(withTitle: "Open System Preferences")
+        alert.addButton(withTitle: "Maybe Later")
+        
+        let response = alert.runModal()
+        if response == .alertFirstButtonReturn {
+            // Open System Preferences to Notifications
+            if let url = URL(string: "x-apple.systempreferences:com.apple.preference.notifications") {
+                NSWorkspace.shared.open(url)
+            }
+        }
+    }
+    
+    private func scheduleNotificationsIfEnabled() {
         // Give a small delay to ensure permission is processed
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             // Schedule notifications with current settings
