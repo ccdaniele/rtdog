@@ -25,6 +25,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Nothing yet
 
+## [1.0.7] - 2025-07-09
+
+### Added
+- **New App Icons**: Updated all app icons (16x16 to 1024x1024) based on new rtdog.png design
+- **Professional Disclaimer**: Added comprehensive disclaimer at bottom of application explaining:
+  - Personal initiative by Datadog employees, not an official Datadog product
+  - Purpose is conscientious compliance with RTO KPIs, not gaming the system
+  - Styled with subtle background and proper spacing for visibility
+- **Enhanced Subtitle Message**: Added "Don't forget the office is still there" to the app subtitle
+
+### Changed
+- **App Title**: Changed from "Office Day Tracker" to "rtdog" across all interfaces
+- **Notification Branding**: Updated notification titles to use "rtdog" instead of "Office Day Tracker"
+- **App Identity**: Complete rebranding with new visual identity and messaging
+- **User Experience**: Professional disclaimer provides clear context about app purpose and origin
+
+### Technical
+- Updated all icon sizes from new rtdog.png source file
+- Maintained universal binary compatibility (Intel + Apple Silicon)
+- All branding updates applied consistently across UI and notifications
+
 ## [1.0.6] - 2025-07-09
 
 ### Fixed
