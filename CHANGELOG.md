@@ -25,6 +25,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Nothing yet
 
+## [1.0.11] - 2025-07-09
+
+### Changed
+- **Default Notification Time**: Changed from 4:30 PM to 10:00 AM for better user experience
+- **Notifications Enabled by Default**: New users now have notifications enabled by default
+- **Streamlined UI**: Removed "Log Today" button from main interface (functionality available by clicking calendar dates)
+
+### Fixed
+- **App Icon Display**: Fixed dock icon display issue by ensuring proper 1024x1024 icon configuration
+- **README Accuracy**: Updated documentation to reflect current app state and features
+
+### Documentation
+- **Updated README**: Comprehensive updates to reflect new notification defaults and UI changes
+- **Settings Documentation**: Updated to reflect new notification UI structure
+- **Disclaimer Updates**: Aligned with current app branding
+
+## [1.0.10] - 2025-07-09
+
+### Added
+- **Major UI Improvements**: Comprehensive user interface and experience enhancements
+- **Notification Action Fix**: Fixed critical issue where notification banner actions weren't updating calendar
+- **Dedicated Notification Settings**: New standalone notification settings view accessible via orange button
+- **Prominent Notifications Button**: Orange "Notifications" button with distinct styling in main UI
+
+### Fixed
+- **Notification Actions Now Update Calendar**: Fixed critical issue using WorkDayManager singleton pattern
+- **UI Layout Issues**: Removed problematic NavigationView that caused two-column layout problems
+- **Settings Organization**: Separated notification settings from general settings for better user experience
+
+### Changed
+- **Main UI Structure**: Removed NavigationView wrapper and restructured layout for cleaner design
+- **WorkDayManager Architecture**: Converted to singleton pattern for data consistency
+- **Settings Separation**: Moved notification-related settings to dedicated view
+
+### Technical
+- Implemented singleton pattern for WorkDayManager to fix notification action handling
+- Created dedicated NotificationSettingsView with comprehensive controls
+- Improved UI architecture by removing NavigationView complexity
+
 ## [1.0.9] - 2025-07-09
 
 ### Added
