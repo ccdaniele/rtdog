@@ -25,6 +25,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Nothing yet
 
+## [1.0.4] - 2025-07-09
+
+### Fixed
+- Calendar month alignment issue where days were misaligned with their actual months
+- Calendar now properly displays correct day ranges for each month (e.g., June 2025 shows June 1-30)
+- Month navigation functions now ensure proper start-of-month date setting
+- WorkDayManager initialization now starts at beginning of current month instead of current datetime
+
+### Changed
+- "Clear Status" option in day selection dialog is now always available instead of only when day has status
+- Month picker now properly handles month selection by setting to start of selected month
+- All calendar month calculations now use consistent start-of-month logic
+
 ## [1.0.3] - 2025-07-09
 
 ### Added
@@ -40,54 +53,51 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Office day calculation now uses precise week-based business day counting instead of calendar day counting
 - Required office days now calculated as 60% of adjusted business days
 
+## [1.0.2] - 2025-07-09
+
+### Fixed
+- Issue where the release script was not properly executing
+- Version management in automated release workflow
+
 ## [1.0.1] - 2025-07-09
 
 ### Added
-- Test notification button in Settings for debugging notification functionality
-- Enhanced notification logging with detailed status messages
-- Better error handling for notification permissions
-- Improved notification scheduling with proper permission checks
-
-### Changed
-- Redesigned Settings view layout with GroupBox components for better organization
-- Replaced Form-based layout with ScrollView for better window sizing
-- Enhanced notification scheduling with better debugging information
-- Improved notification initialization with proper timing
+- Test notification button in Settings for debugging notification issues
+- Enhanced logging system for better troubleshooting
 
 ### Fixed
-- Settings window sizing issue - content now properly fits and is centered
-- Notification functionality - notifications now work correctly when scheduled
-- Settings view layout issues with proper frame constraints (500x600 minimum)
-- Notification permission handling with better error reporting
-- Enhanced notification scheduling with proper weekday calculation
+- Settings window sizing and layout issues - now properly sized (500x600) with centered content
+- Notification functionality not working - improved permission handling and scheduling
+- Settings window now uses GroupBox components for better organization
+- Notification manager now has proper error handling and detailed logging
 
-## [1.0.0] - 2025-07-09
+### Changed
+- Settings UI redesigned with better visual hierarchy and spacing
+- Improved notification initialization and permission checking
+
+## [1.0.0] - 2025-07-08
 
 ### Added
 - Initial release of rtdog (Office Day Tracker)
-- Monthly calendar view with color-coded work status
-- Interactive notifications for daily work location prompts
-- Support for Work From Office, Work From Home, and PTO days
-- Office day quota tracking with 3-day per week average
-- Banking system for surplus office days within the month
-- Settings panel for notification times and preferences
-- Historical data editing for past dates
-- Month navigation with date picker
-- Recent days quick-entry interface for unlogged working days
-- Custom rtdog application icon
-- Data persistence using UserDefaults
-- macOS Sequoia 15.5+ support
-- Native Swift/SwiftUI implementation
+- Calendar view with month navigation
+- Work day tracking (office/home/PTO)
+- Notification system for work reminders
+- Settings panel for configuration
+- Weekend and holiday management
+- Monthly quota tracking and summary
+- Persistent data storage with UserDefaults
+- Complete project management setup with semantic versioning
+- Automated release workflow with build scripts
+- Professional documentation and contribution guidelines
 
-### Technical Details
-- Bundle ID: tse-coders.rtdog
-- Minimum macOS: 15.5
-- Architecture: Universal (Intel + Apple Silicon)
-- Framework: SwiftUI
-- Notifications: UNUserNotificationCenter
-- Data Storage: Local (UserDefaults)
-
----
+### Technical Implementation
+- Swift/SwiftUI macOS application
+- MVVM architecture with ObservableObject
+- Calendar integration with proper date handling
+- Local notification system with permission management
+- Settings persistence with Codable protocols
+- Comprehensive error handling and logging
+- Professional Git workflow with conventional commits
 
 ## Version Format
 - **MAJOR.MINOR.PATCH** (e.g., 1.0.0)
