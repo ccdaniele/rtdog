@@ -2,6 +2,8 @@ import Foundation
 import Combine
 
 class WorkDayManager: ObservableObject {
+    static let shared = WorkDayManager()
+    
     @Published var workDays: [Date: WorkDay] = [:]
     @Published var settings: AppSettings = AppSettings.default
     @Published var currentMonth: Date = {
@@ -15,7 +17,7 @@ class WorkDayManager: ObservableObject {
     private let workDaysKey = "workDays"
     private let settingsKey = "appSettings"
     
-    init() {
+    private init() {
         loadData()
     }
     

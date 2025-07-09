@@ -16,71 +16,6 @@ struct SettingsView: View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    // Notifications Section
-                    GroupBox(label: Text("Notifications").font(.headline)) {
-                        VStack(alignment: .leading, spacing: 12) {
-                            Toggle("Enable Notifications", isOn: $settings.enableNotifications)
-                            
-                            if settings.enableNotifications {
-                                Divider()
-                                
-                                HStack {
-                                    Text("Notification Time:")
-                                        .font(.subheadline)
-                                    Spacer()
-                                    DatePicker("", selection: $settings.notificationTime, displayedComponents: .hourAndMinute)
-                                        .labelsHidden()
-                                        .datePickerStyle(CompactDatePickerStyle())
-                                }
-                                
-                                VStack(alignment: .leading, spacing: 8) {
-                                    Text("Notification Days")
-                                        .font(.subheadline)
-                                        .fontWeight(.medium)
-                                    
-                                    LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 2), spacing: 8) {
-                                        ForEach(1...7, id: \.self) { dayOfWeek in
-                                            Toggle(weekdayName(for: dayOfWeek), isOn: Binding(
-                                                get: { settings.notificationDays.contains(dayOfWeek) },
-                                                set: { isOn in
-                                                    if isOn {
-                                                        settings.notificationDays.insert(dayOfWeek)
-                                                    } else {
-                                                        settings.notificationDays.remove(dayOfWeek)
-                                                    }
-                                                }
-                                            ))
-                                            .toggleStyle(SwitchToggleStyle())
-                                        }
-                                    }
-                                }
-                                
-                                // Test notification button
-                                HStack {
-                                    Spacer()
-                                    Button("Debug Notifications") {
-                                        NotificationManager.shared.debugNotificationStatus()
-                                    }
-                                    .buttonStyle(BorderedButtonStyle())
-                                    .help("Check notification permissions and system status")
-                                    
-                                    Button("Test Notification") {
-                                        NotificationManager.shared.testNotification()
-                                    }
-                                    .buttonStyle(BorderedButtonStyle())
-                                    .help("Send a test notification in 2 seconds")
-                                    
-                                    Button("Test Scheduled") {
-                                        NotificationManager.shared.testScheduledNotification()
-                                    }
-                                    .buttonStyle(BorderedButtonStyle())
-                                    .help("Schedule a test notification for next minute")
-                                }
-                            }
-                        }
-                        .padding()
-                    }
-                    
                     // Weekend Days Section
                     GroupBox(label: Text("Weekend Days").font(.headline)) {
                         VStack(alignment: .leading, spacing: 8) {
@@ -170,10 +105,6 @@ struct SettingsView: View {
                 ToolbarItem(placement: .primaryAction) {
                     Button("Save") {
                         workDayManager.updateSettings(settings)
-                        NotificationManager.shared.rescheduleNotifications(
-                            for: settings,
-                            remainingDays: workDayManager.getMonthlyQuota(for: Date()).remainingOfficeDays
-                        )
                         presentationMode.wrappedValue.dismiss()
                     }
                 }

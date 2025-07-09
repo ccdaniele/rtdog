@@ -10,115 +10,131 @@ import AppKit
 import UserNotifications
 
 struct ContentView: View {
-    @StateObject private var workDayManager = WorkDayManager()
+    @StateObject private var workDayManager = WorkDayManager.shared
     @State private var showingSettings = false
     @State private var showingQuickLog = false
     @State private var showingRecentDaysLog = false
+    @State private var showingNotifications = false
     
     var body: some View {
-        NavigationView {
-            VStack(spacing: 20) {
-                // Header
-                HStack {
-                    VStack(alignment: .leading) {
-                        Text("rtdog")
-                            .font(.largeTitle)
-                            .fontWeight(.bold)
-                        
-                        Text("Track your hybrid work schedule - Don't forget the office is still there")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
+        VStack(spacing: 20) {
+            // Header with title and action buttons
+            HStack {
+                VStack(alignment: .leading) {
+                    Text("rtdog")
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                    
+                    Text("Track your hybrid work schedule - Don't forget the office is still there")
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                }
+                
+                Spacer()
+                
+                // Action buttons
+                HStack(spacing: 12) {
+                    Button(action: { showingQuickLog = true }) {
+                        VStack {
+                            Image(systemName: "plus.circle.fill")
+                                .font(.title2)
+                            Text("Log Today")
+                                .font(.caption)
+                        }
                     }
+                    .buttonStyle(BorderedButtonStyle())
                     
-                    Spacer()
-                    
-                    // Quick log buttons
-                    HStack(spacing: 12) {
-                        Button(action: { showingQuickLog = true }) {
+                    if hasRecentUnloggedDays {
+                        Button(action: { showingRecentDaysLog = true }) {
                             VStack {
-                                Image(systemName: "plus.circle.fill")
+                                Image(systemName: "clock.fill")
                                     .font(.title2)
-                                Text("Log Today")
+                                Text("Recent Days")
                                     .font(.caption)
                             }
                         }
                         .buttonStyle(BorderedButtonStyle())
-                        
-                        if hasRecentUnloggedDays {
-                            Button(action: { showingRecentDaysLog = true }) {
-                                VStack {
-                                    Image(systemName: "clock.fill")
-                                        .font(.title2)
-                                    Text("Recent Days")
-                                        .font(.caption)
-                                }
-                            }
-                            .buttonStyle(BorderedButtonStyle())
+                    }
+                    
+                    // Notifications button with distinct color
+                    Button(action: { showingNotifications = true }) {
+                        VStack {
+                            Image(systemName: "bell.fill")
+                                .font(.title2)
+                            Text("Notifications")
+                                .font(.caption)
                         }
                     }
-                }
-                .padding(.horizontal)
-                
-                // Main content area
-                HStack(alignment: .top, spacing: 20) {
-                    // Calendar section
-                    VStack {
-                        CalendarView(workDayManager: workDayManager)
-                    }
-                    .frame(minWidth: 400)
+                    .buttonStyle(BorderedProminentButtonStyle())
+                    .tint(.orange)
                     
-                    // Quota summary section
-                    VStack {
-                        QuotaSummaryView(workDayManager: workDayManager)
-                        
-                        Spacer()
-                    }
-                    .frame(width: 300)
-                }
-                .padding(.horizontal)
-                
-                Spacer()
-                
-                // Disclaimer at the bottom
-                VStack(spacing: 8) {
-                    Text("**Disclaimer:** This application is a personal initiative by Datadog employees and is not an official Datadog product. Its sole purpose is to help you conscientiously track your in-office days and ensure good-faith compliance with RTO KPIs. This tool is explicitly not for \"gaming\" or cheating the system.")
-                        .font(.caption)
-                        .foregroundColor(.secondary)
-                        .multilineTextAlignment(.center)
-                        .padding(.horizontal, 40)
-                        .padding(.bottom, 8)
-                }
-                .background(Color.gray.opacity(0.05))
-                .cornerRadius(8)
-                .padding(.horizontal)
-                .padding(.bottom, 16)
-            }
-            .background(Color(NSColor.windowBackgroundColor))
-            .toolbar {
-                ToolbarItem(placement: .primaryAction) {
                     Button(action: { showingSettings = true }) {
-                        Image(systemName: "gear")
-                            .font(.title2)
+                        VStack {
+                            Image(systemName: "gear")
+                                .font(.title2)
+                            Text("Settings")
+                                .font(.caption)
+                        }
                     }
+                    .buttonStyle(BorderedButtonStyle())
                 }
             }
-            .sheet(isPresented: $showingSettings) {
-                SettingsView(workDayManager: workDayManager)
-            }
-            .confirmationDialog("Log work location for today", isPresented: $showingQuickLog) {
-                Button("I worked from the Office") {
-                    workDayManager.setWorkDay(date: Date(), status: .workFromOffice)
+            .padding(.horizontal)
+            
+            // Main content area - Calendar and Quota side by side
+            HStack(alignment: .top, spacing: 20) {
+                // Calendar section
+                VStack {
+                    CalendarView(workDayManager: workDayManager)
                 }
+                .frame(minWidth: 400)
                 
-                Button("I worked from Home") {
-                    workDayManager.setWorkDay(date: Date(), status: .workFromHome)
+                // Quota summary section
+                VStack {
+                    QuotaSummaryView(workDayManager: workDayManager)
+                    
+                    Spacer()
                 }
-                
-                Button("Cancel", role: .cancel) { }
+                .frame(width: 300)
             }
-            .sheet(isPresented: $showingRecentDaysLog) {
-                RecentDaysLogView(workDayManager: workDayManager, isPresented: $showingRecentDaysLog)
+            .padding(.horizontal)
+            
+            Spacer()
+            
+            // Disclaimer at the bottom
+            VStack(spacing: 8) {
+                Text("**Disclaimer:** This application is a personal initiative by Datadog employees and is not an official Datadog product. Its sole purpose is to help you conscientiously track your in-office days and ensure good-faith compliance with RTO KPIs. This tool is explicitly not for \"gaming\" or cheating the system.")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, 40)
+                    .padding(.bottom, 8)
             }
+            .background(Color.gray.opacity(0.05))
+            .cornerRadius(8)
+            .padding(.horizontal)
+            .padding(.bottom, 16)
+        }
+        .background(Color(NSColor.windowBackgroundColor))
+        .sheet(isPresented: $showingSettings) {
+            SettingsView(workDayManager: workDayManager)
+        }
+        .sheet(isPresented: $showingNotifications) {
+            NotificationSettingsView(workDayManager: workDayManager)
+        }
+        .confirmationDialog("Log work location for today", isPresented: $showingQuickLog) {
+            Button("I worked from the Office") {
+                workDayManager.setWorkDay(date: Date(), status: .workFromOffice)
+            }
+            
+            Button("I worked from Home") {
+                workDayManager.setWorkDay(date: Date(), status: .workFromHome)
+            }
+            
+            Button("Cancel", role: .cancel) { }
+        }
+        .sheet(isPresented: $showingRecentDaysLog) {
+            RecentDaysLogView(workDayManager: workDayManager, isPresented: $showingRecentDaysLog)
         }
         .frame(minWidth: 800, minHeight: 600)
         .onAppear {

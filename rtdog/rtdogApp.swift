@@ -35,7 +35,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDele
     
     func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
         
-        let workDayManager = WorkDayManager()
+        let workDayManager = WorkDayManager.shared
         
         switch response.actionIdentifier {
         case "office":
