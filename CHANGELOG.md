@@ -25,6 +25,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Nothing yet
 
+## [1.0.6] - 2025-07-09
+
+### Fixed
+- **Bulk Clear Functionality**: Now properly clears PTO/holidays in addition to work status
+- **Clear Days Button Position**: Moved below calendar with prominent red gradient styling for better visibility
+- **UI Clarity**: Button no longer blends with month navigation, includes descriptive text and trash icon
+- **Comprehensive Clearing**: All day statuses (work location, PTO, holidays) are now properly reset during bulk clear
+
+### Changed
+- Improved bulk clear user experience with better visual feedback and positioning
+- Enhanced button styling with gradient background, shadow, and clear visual hierarchy
+
 ## [1.0.5] - 2025-07-09
 
 ### Added
@@ -38,9 +50,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Individual day clearing now works through bulk clear interface instead of hidden dialog option
 
 ### Changed
-- Enhanced calendar day interaction with clear mode vs normal mode behavior
-- Added visual indicators for selected days during bulk clear operation
-- Improved UI organization with conditional header displays
+- Enhanced calendar day interaction with clear mode toggle
+- Improved visual feedback for selected days in clear mode
 
 ## [1.0.4] - 2025-07-09
 
@@ -74,41 +85,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Settings window sizing and layout issues
-- Notification system functionality restored
-- Enhanced notification permission handling
+- Notification system not working correctly
+- Improved notification debugging and logging
 
-### Added
-- Test notification functionality for debugging
-- Improved logging system for troubleshooting
+### Changed
+- Enhanced settings UI with better organization
+- Improved notification handling and error reporting
 
 ## [1.0.1] - 2025-07-09
 
 ### Fixed
-- Settings window now properly sizes and centers content
-- Notification system now works correctly with proper permission handling
-- Enhanced error handling and logging for notifications
-
-### Added
-- Test notification button in Settings for debugging
-- Better UI organization with GroupBox components
-- Improved notification setup and error handling
+- Initial bug fixes for settings and notifications
 
 ## [1.0.0] - 2025-07-09
 
 ### Added
-- Initial release of rtdog (Office Day Tracker)
-- Calendar view with month navigation
-- Work day tracking (Work From Office, Work From Home, PTO)
-- Quota calculation and summary
-- Settings panel with notification preferences
-- Notification system for work reminders
-- Data persistence using UserDefaults
-- Modern SwiftUI interface optimized for macOS
-
-### Features
-- **Calendar Interface**: Clean month view with day status indicators
-- **Work Status Tracking**: Easy selection of work location and PTO days
-- **Quota Management**: Automatic calculation of required office days
-- **Notifications**: Configurable reminders for work planning
-- **Settings**: Comprehensive preferences for all app features
-- **Data Persistence**: Reliable storage of work history and settings 
+- Initial release of Office Day Tracker
+- Calendar view with work day tracking
+- Monthly quota calculation and display
+- PTO and holiday management
+- Notification system for office day reminders
+- Settings panel for configuration
+- macOS native application with proper UI 
