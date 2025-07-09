@@ -1,0 +1,546 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXContainerItemProxy section */
+		93C55FA72E1ED53800685817 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93C55F902E1ED53700685817 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 93C55F972E1ED53700685817;
+			remoteInfo = rtdog;
+		};
+		93C55FB12E1ED53800685817 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93C55F902E1ED53700685817 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 93C55F972E1ED53700685817;
+			remoteInfo = rtdog;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		93C55F982E1ED53700685817 /* rtdog.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = rtdog.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		93C55FA62E1ED53800685817 /* rtdogTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = rtdogTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		93C55FB02E1ED53800685817 /* rtdogUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = rtdogUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+/* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedRootGroup section */
+		93C55F9A2E1ED53700685817 /* rtdog */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = rtdog;
+			sourceTree = "<group>";
+		};
+		93C55FA92E1ED53800685817 /* rtdogTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = rtdogTests;
+			sourceTree = "<group>";
+		};
+		93C55FB32E1ED53800685817 /* rtdogUITests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = rtdogUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXFileSystemSynchronizedRootGroup section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		93C55F952E1ED53700685817 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		93C55FA32E1ED53800685817 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		93C55FAD2E1ED53800685817 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		93C55F8F2E1ED53700685817 = {
+			isa = PBXGroup;
+			children = (
+				93C55F9A2E1ED53700685817 /* rtdog */,
+				93C55FA92E1ED53800685817 /* rtdogTests */,
+				93C55FB32E1ED53800685817 /* rtdogUITests */,
+				93C55F992E1ED53700685817 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		93C55F992E1ED53700685817 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				93C55F982E1ED53700685817 /* rtdog.app */,
+				93C55FA62E1ED53800685817 /* rtdogTests.xctest */,
+				93C55FB02E1ED53800685817 /* rtdogUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		93C55F972E1ED53700685817 /* rtdog */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 93C55FBA2E1ED53800685817 /* Build configuration list for PBXNativeTarget "rtdog" */;
+			buildPhases = (
+				93C55F942E1ED53700685817 /* Sources */,
+				93C55F952E1ED53700685817 /* Frameworks */,
+				93C55F962E1ED53700685817 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			fileSystemSynchronizedGroups = (
+				93C55F9A2E1ED53700685817 /* rtdog */,
+			);
+			name = rtdog;
+			packageProductDependencies = (
+			);
+			productName = rtdog;
+			productReference = 93C55F982E1ED53700685817 /* rtdog.app */;
+			productType = "com.apple.product-type.application";
+		};
+		93C55FA52E1ED53800685817 /* rtdogTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 93C55FBD2E1ED53800685817 /* Build configuration list for PBXNativeTarget "rtdogTests" */;
+			buildPhases = (
+				93C55FA22E1ED53800685817 /* Sources */,
+				93C55FA32E1ED53800685817 /* Frameworks */,
+				93C55FA42E1ED53800685817 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				93C55FA82E1ED53800685817 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				93C55FA92E1ED53800685817 /* rtdogTests */,
+			);
+			name = rtdogTests;
+			packageProductDependencies = (
+			);
+			productName = rtdogTests;
+			productReference = 93C55FA62E1ED53800685817 /* rtdogTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		93C55FAF2E1ED53800685817 /* rtdogUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 93C55FC02E1ED53800685817 /* Build configuration list for PBXNativeTarget "rtdogUITests" */;
+			buildPhases = (
+				93C55FAC2E1ED53800685817 /* Sources */,
+				93C55FAD2E1ED53800685817 /* Frameworks */,
+				93C55FAE2E1ED53800685817 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				93C55FB22E1ED53800685817 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				93C55FB32E1ED53800685817 /* rtdogUITests */,
+			);
+			name = rtdogUITests;
+			packageProductDependencies = (
+			);
+			productName = rtdogUITests;
+			productReference = 93C55FB02E1ED53800685817 /* rtdogUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		93C55F902E1ED53700685817 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1640;
+				LastUpgradeCheck = 1640;
+				TargetAttributes = {
+					93C55F972E1ED53700685817 = {
+						CreatedOnToolsVersion = 16.4;
+					};
+					93C55FA52E1ED53800685817 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 93C55F972E1ED53700685817;
+					};
+					93C55FAF2E1ED53800685817 = {
+						CreatedOnToolsVersion = 16.4;
+						TestTargetID = 93C55F972E1ED53700685817;
+					};
+				};
+			};
+			buildConfigurationList = 93C55F932E1ED53700685817 /* Build configuration list for PBXProject "rtdog" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 93C55F8F2E1ED53700685817;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 93C55F992E1ED53700685817 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				93C55F972E1ED53700685817 /* rtdog */,
+				93C55FA52E1ED53800685817 /* rtdogTests */,
+				93C55FAF2E1ED53800685817 /* rtdogUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		93C55F962E1ED53700685817 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		93C55FA42E1ED53800685817 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		93C55FAE2E1ED53800685817 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		93C55F942E1ED53700685817 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		93C55FA22E1ED53800685817 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		93C55FAC2E1ED53800685817 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		93C55FA82E1ED53800685817 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 93C55F972E1ED53700685817 /* rtdog */;
+			targetProxy = 93C55FA72E1ED53800685817 /* PBXContainerItemProxy */;
+		};
+		93C55FB22E1ED53800685817 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 93C55F972E1ED53700685817 /* rtdog */;
+			targetProxy = 93C55FB12E1ED53800685817 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		93C55FB82E1ED53800685817 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		93C55FB92E1ED53800685817 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+			};
+			name = Release;
+		};
+		93C55FBB2E1ED53800685817 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = rtdog/rtdog.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "tse-coders.rtdog";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		93C55FBC2E1ED53800685817 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = rtdog/rtdog.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_NSHumanReadableCopyright = "";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "tse-coders.rtdog";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				REGISTER_APP_GROUPS = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		93C55FBE2E1ED53800685817 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "tse-coders.rtdogTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/rtdog.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/rtdog";
+			};
+			name = Debug;
+		};
+		93C55FBF2E1ED53800685817 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 15.5;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "tse-coders.rtdogTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/rtdog.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/rtdog";
+			};
+			name = Release;
+		};
+		93C55FC12E1ED53800685817 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "tse-coders.rtdogUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = rtdog;
+			};
+			name = Debug;
+		};
+		93C55FC22E1ED53800685817 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "tse-coders.rtdogUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TEST_TARGET_NAME = rtdog;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		93C55F932E1ED53700685817 /* Build configuration list for PBXProject "rtdog" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				93C55FB82E1ED53800685817 /* Debug */,
+				93C55FB92E1ED53800685817 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		93C55FBA2E1ED53800685817 /* Build configuration list for PBXNativeTarget "rtdog" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				93C55FBB2E1ED53800685817 /* Debug */,
+				93C55FBC2E1ED53800685817 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		93C55FBD2E1ED53800685817 /* Build configuration list for PBXNativeTarget "rtdogTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				93C55FBE2E1ED53800685817 /* Debug */,
+				93C55FBF2E1ED53800685817 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		93C55FC02E1ED53800685817 /* Build configuration list for PBXNativeTarget "rtdogUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				93C55FC12E1ED53800685817 /* Debug */,
+				93C55FC22E1ED53800685817 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 93C55F902E1ED53700685817 /* Project object */;
+}
