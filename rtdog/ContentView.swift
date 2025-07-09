@@ -111,14 +111,23 @@ struct ContentView: View {
     }
     
     private func setupNotifications() {
+        print("🚀 Setting up notifications...")
+        
+        // Request permission first
         NotificationManager.shared.requestNotificationPermission()
         
-        // Schedule notifications with current settings
-        let quota = workDayManager.getMonthlyQuota(for: Date())
-        NotificationManager.shared.rescheduleNotifications(
-            for: workDayManager.settings,
-            remainingDays: quota.remainingOfficeDays
-        )
+        // Give a small delay to ensure permission is processed
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            // Schedule notifications with current settings
+            let quota = self.workDayManager.getMonthlyQuota(for: Date())
+            NotificationManager.shared.rescheduleNotifications(
+                for: self.workDayManager.settings,
+                remainingDays: quota.remainingOfficeDays
+            )
+            
+            // Check what notifications are scheduled
+            NotificationManager.shared.checkPendingNotifications()
+        }
     }
     
     private var hasRecentUnloggedDays: Bool {
