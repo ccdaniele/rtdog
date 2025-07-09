@@ -136,8 +136,9 @@ struct CalendarView: View {
                 }
             }
             
-            if let date = selectedDate, workDayManager.getWorkDay(for: date).status != .unlogged {
-                Button("Clear Status", role: .destructive) {
+            // Always show Clear Status option
+            Button("Clear Status", role: .destructive) {
+                if let date = selectedDate {
                     workDayManager.setWorkDay(date: date, status: .unlogged)
                 }
             }
@@ -187,19 +188,29 @@ struct CalendarView: View {
     }
     
     private func previousMonth() {
+        let calendar = Calendar.current
         if let newDate = calendar.date(byAdding: .month, value: -1, to: workDayManager.currentMonth) {
-            workDayManager.currentMonth = newDate
+            // Ensure we're at the start of the month
+            let startOfMonth = calendar.dateInterval(of: .month, for: newDate)?.start ?? newDate
+            workDayManager.currentMonth = calendar.startOfDay(for: startOfMonth)
         }
     }
     
     private func nextMonth() {
+        let calendar = Calendar.current
         if let newDate = calendar.date(byAdding: .month, value: 1, to: workDayManager.currentMonth) {
-            workDayManager.currentMonth = newDate
+            // Ensure we're at the start of the month
+            let startOfMonth = calendar.dateInterval(of: .month, for: newDate)?.start ?? newDate
+            workDayManager.currentMonth = calendar.startOfDay(for: startOfMonth)
         }
     }
     
     private func jumpToToday() {
-        workDayManager.currentMonth = Date()
+        let calendar = Calendar.current
+        let today = Date()
+        // Ensure we're at the start of the current month
+        let startOfMonth = calendar.dateInterval(of: .month, for: today)?.start ?? today
+        workDayManager.currentMonth = calendar.startOfDay(for: startOfMonth)
     }
 }
 
@@ -365,7 +376,9 @@ struct MonthPickerView: View {
             }
         }
         .onAppear {
-            selectedDate = currentMonth
+            // Ensure selectedDate is set to the start of the currentMonth
+            let startOfMonth = calendar.dateInterval(of: .month, for: currentMonth)?.start ?? currentMonth
+            selectedDate = calendar.startOfDay(for: startOfMonth)
         }
     }
     
@@ -389,7 +402,9 @@ struct MonthPickerView: View {
     }
     
     private func applySelection() {
-        currentMonth = selectedDate
+        // Ensure we're setting to the start of the selected month
+        let startOfMonth = calendar.dateInterval(of: .month, for: selectedDate)?.start ?? selectedDate
+        currentMonth = calendar.startOfDay(for: startOfMonth)
         isPresented = false
     }
 }

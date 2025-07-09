@@ -4,7 +4,12 @@ import Combine
 class WorkDayManager: ObservableObject {
     @Published var workDays: [Date: WorkDay] = [:]
     @Published var settings: AppSettings = AppSettings.default
-    @Published var currentMonth: Date = Date()
+    @Published var currentMonth: Date = {
+        let calendar = Calendar.current
+        let today = Date()
+        let startOfMonth = calendar.dateInterval(of: .month, for: today)?.start ?? today
+        return calendar.startOfDay(for: startOfMonth)
+    }()
     
     private let userDefaults = UserDefaults.standard
     private let workDaysKey = "workDays"
