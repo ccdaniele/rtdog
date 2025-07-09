@@ -6,6 +6,10 @@ struct CalendarView: View {
     @State private var showingActionSheet = false
     @State private var showingMonthPicker = false
     
+    // Bulk clear functionality
+    @State private var isInClearMode = false
+    @State private var selectedDatesForClearing: Set<Date> = []
+    
     private let calendar = Calendar.current
     private let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
@@ -29,54 +33,20 @@ struct CalendarView: View {
         }
     }
     
+    private var isPTOToggleText: String {
+        guard let date = selectedDate else { return "Mark as PTO/Holiday" }
+        let workDay = workDayManager.getWorkDay(for: date)
+        return workDay.isPTO ? "Remove PTO/Holiday" : "Mark as PTO/Holiday"
+    }
+    
     var body: some View {
         VStack {
-            // Month navigation
-            HStack {
-                Button(action: previousMonth) {
-                    Image(systemName: "chevron.left")
-                        .font(.title2)
-                        .foregroundColor(.primary)
-                }
-                
-                Spacer()
-                
-                VStack {
-                    Button(action: { showingMonthPicker = true }) {
-                        Text(monthYearString)
-                            .font(.title2)
-                            .fontWeight(.semibold)
-                            .foregroundColor(.primary)
-                    }
-                    .buttonStyle(PlainButtonStyle())
-                    
-                    HStack(spacing: 16) {
-                        if !calendar.isDate(workDayManager.currentMonth, equalTo: Date(), toGranularity: .month) {
-                            Button("Today") {
-                                jumpToToday()
-                            }
-                            .font(.caption)
-                            .foregroundColor(.accentColor)
-                        }
-                        
-                        Button("Recent") {
-                            showingMonthPicker = true
-                        }
-                        .font(.caption)
-                        .foregroundColor(.accentColor)
-                    }
-                }
-                
-                Spacer()
-                
-                Button(action: nextMonth) {
-                    Image(systemName: "chevron.right")
-                        .font(.title2)
-                        .foregroundColor(.primary)
-                }
+            // Month navigation and clear mode header
+            if isInClearMode {
+                clearModeHeader
+            } else {
+                normalModeHeader
             }
-            .padding(.horizontal)
-            .padding(.bottom, 10)
             
             // Calendar grid
             LazyVGrid(columns: Array(repeating: GridItem(.flexible()), count: 7), spacing: 8) {
@@ -95,11 +65,17 @@ struct CalendarView: View {
                         CalendarDayView(
                             date: date,
                             workDay: workDayManager.getWorkDay(for: date),
-                            isCurrentMonth: calendar.isDate(date, equalTo: workDayManager.currentMonth, toGranularity: .month)
+                            isCurrentMonth: calendar.isDate(date, equalTo: workDayManager.currentMonth, toGranularity: .month),
+                            isInClearMode: isInClearMode,
+                            isSelectedForClearing: selectedDatesForClearing.contains(date)
                         )
                         .onTapGesture {
-                            selectedDate = date
-                            showingActionSheet = true
+                            if isInClearMode {
+                                toggleDateSelection(date)
+                            } else {
+                                selectedDate = date
+                                showingActionSheet = true
+                            }
                         }
                     } else {
                         // Empty cell for padding
@@ -111,16 +87,155 @@ struct CalendarView: View {
             }
             .padding(.horizontal)
         }
-        .sheet(isPresented: $showingActionSheet) {
-            DaySelectionSheet(
-                selectedDate: selectedDate,
-                workDayManager: workDayManager,
-                isPresented: $showingActionSheet
-            )
+        .confirmationDialog(dialogTitle, isPresented: $showingActionSheet) {
+            Button("Work From Office") {
+                if let date = selectedDate {
+                    workDayManager.setWorkDay(date: date, status: .workFromOffice)
+                }
+            }
+            
+            Button("Work From Home") {
+                if let date = selectedDate {
+                    workDayManager.setWorkDay(date: date, status: .workFromHome)
+                }
+            }
+            
+            Button(isPTOToggleText) {
+                if let date = selectedDate {
+                    workDayManager.togglePTO(for: date)
+                }
+            }
+            
+            Button("Cancel", role: .cancel) { }
         }
         .sheet(isPresented: $showingMonthPicker) {
             MonthPickerView(currentMonth: $workDayManager.currentMonth, isPresented: $showingMonthPicker)
         }
+    }
+    
+    // MARK: - Header Views
+    
+    @ViewBuilder
+    private var normalModeHeader: some View {
+        HStack {
+            Button(action: previousMonth) {
+                Image(systemName: "chevron.left")
+                    .font(.title2)
+                    .foregroundColor(.primary)
+            }
+            
+            Spacer()
+            
+            VStack {
+                Button(action: { showingMonthPicker = true }) {
+                    Text(monthYearString)
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                        .foregroundColor(.primary)
+                }
+                .buttonStyle(PlainButtonStyle())
+                
+                HStack(spacing: 16) {
+                    if !calendar.isDate(workDayManager.currentMonth, equalTo: Date(), toGranularity: .month) {
+                        Button("Today") {
+                            jumpToToday()
+                        }
+                        .font(.caption)
+                        .foregroundColor(.accentColor)
+                    }
+                    
+                    Button("Recent") {
+                        showingMonthPicker = true
+                    }
+                    .font(.caption)
+                    .foregroundColor(.accentColor)
+                    
+                    Button("Clear Days") {
+                        enterClearMode()
+                    }
+                    .font(.caption)
+                    .foregroundColor(.red)
+                }
+            }
+            
+            Spacer()
+            
+            Button(action: nextMonth) {
+                Image(systemName: "chevron.right")
+                    .font(.title2)
+                    .foregroundColor(.primary)
+            }
+        }
+        .padding(.horizontal)
+        .padding(.bottom, 10)
+    }
+    
+    @ViewBuilder
+    private var clearModeHeader: some View {
+        VStack(spacing: 12) {
+            HStack {
+                Text("Select days to clear")
+                    .font(.headline)
+                    .foregroundColor(.primary)
+                
+                Spacer()
+                
+                Button("Cancel") {
+                    exitClearMode()
+                }
+                .foregroundColor(.secondary)
+            }
+            
+            HStack {
+                Text("\(selectedDatesForClearing.count) day(s) selected")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+                
+                Spacer()
+                
+                if !selectedDatesForClearing.isEmpty {
+                    Button("Clear Selected") {
+                        clearSelectedDays()
+                    }
+                    .font(.subheadline)
+                    .foregroundColor(.white)
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 8)
+                    .background(Color.red)
+                    .cornerRadius(8)
+                }
+            }
+        }
+        .padding(.horizontal)
+        .padding(.vertical, 12)
+        .background(Color.gray.opacity(0.1))
+    }
+    
+    // MARK: - Clear Mode Functions
+    
+    private func enterClearMode() {
+        isInClearMode = true
+        selectedDatesForClearing.removeAll()
+    }
+    
+    private func exitClearMode() {
+        isInClearMode = false
+        selectedDatesForClearing.removeAll()
+    }
+    
+    private func toggleDateSelection(_ date: Date) {
+        if selectedDatesForClearing.contains(date) {
+            selectedDatesForClearing.remove(date)
+        } else {
+            selectedDatesForClearing.insert(date)
+        }
+    }
+    
+    private func clearSelectedDays() {
+        for date in selectedDatesForClearing {
+            workDayManager.setWorkDay(date: date, status: .unlogged)
+        }
+        exitClearMode()
     }
     
     private var monthYearString: String {
@@ -191,6 +306,8 @@ struct CalendarDayView: View {
     let date: Date
     let workDay: WorkDay
     let isCurrentMonth: Bool
+    let isInClearMode: Bool
+    let isSelectedForClearing: Bool
     
     private var dayNumber: String {
         let formatter = DateFormatter()
@@ -199,6 +316,10 @@ struct CalendarDayView: View {
     }
     
     private var backgroundColor: Color {
+        if isInClearMode && isSelectedForClearing {
+            return Color.red.opacity(0.3)
+        }
+        
         // Always show status colors regardless of month
         switch workDay.effectiveStatus {
         case .workFromOffice:
@@ -213,6 +334,10 @@ struct CalendarDayView: View {
     }
     
     private var textColor: Color {
+        if isInClearMode && isSelectedForClearing {
+            return Color.red
+        }
+        
         let alpha: Double = isCurrentMonth ? 1.0 : 0.7
         
         switch workDay.effectiveStatus {
@@ -243,12 +368,25 @@ struct CalendarDayView: View {
                         .fill(statusIndicatorColor)
                         .frame(width: 4, height: 4)
                 }
+                
+                // Selection indicator for clear mode
+                if isInClearMode && isSelectedForClearing {
+                    Image(systemName: "checkmark.circle.fill")
+                        .foregroundColor(.red)
+                        .font(.caption2)
+                }
             }
         }
         .frame(height: 40)
+        .scaleEffect(isInClearMode && isSelectedForClearing ? 0.95 : 1.0)
+        .animation(.easeInOut(duration: 0.1), value: isSelectedForClearing)
     }
     
     private var strokeColor: Color {
+        if isInClearMode && isSelectedForClearing {
+            return Color.red
+        }
+        
         if Calendar.current.isDateInToday(date) {
             return Color.orange
         } else if !isCurrentMonth && workDay.status != .unlogged {
@@ -259,6 +397,10 @@ struct CalendarDayView: View {
     }
     
     private var strokeWidth: CGFloat {
+        if isInClearMode && isSelectedForClearing {
+            return 2
+        }
+        
         if Calendar.current.isDateInToday(date) {
             return 2
         } else if !isCurrentMonth && workDay.status != .unlogged {
@@ -379,117 +521,5 @@ struct MonthPickerView: View {
         let startOfMonth = calendar.dateInterval(of: .month, for: selectedDate)?.start ?? selectedDate
         currentMonth = calendar.startOfDay(for: startOfMonth)
         isPresented = false
-    }
-}
-
-struct DaySelectionSheet: View {
-    let selectedDate: Date?
-    let workDayManager: WorkDayManager
-    @Binding var isPresented: Bool
-    
-    private var dateFormatter: DateFormatter {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "EEEE, MMMM d, yyyy"
-        return formatter
-    }
-    
-    private var currentWorkDay: WorkDay? {
-        guard let date = selectedDate else { return nil }
-        return workDayManager.getWorkDay(for: date)
-    }
-    
-    private var isPTOToggleText: String {
-        guard let workDay = currentWorkDay else { return "Add PTO" }
-        return workDay.isPTO ? "Remove PTO" : "Add PTO"
-    }
-    
-    private var currentStatusText: String {
-        guard let workDay = currentWorkDay else { return "No status set" }
-        switch workDay.status {
-        case .workFromOffice:
-            return "Currently: Work From Office"
-        case .workFromHome:
-            return "Currently: Work From Home"
-        case .unlogged:
-            return "No status set"
-        case .notWorkingDay:
-            return "Currently: Not Working Day"
-        }
-    }
-    
-    var body: some View {
-        NavigationView {
-            VStack(spacing: 20) {
-                if let date = selectedDate {
-                    Text(dateFormatter.string(from: date))
-                        .font(.title2)
-                        .fontWeight(.semibold)
-                    
-                    Text(currentStatusText)
-                        .font(.subheadline)
-                        .foregroundColor(.secondary)
-                    
-                    VStack(spacing: 16) {
-                        // Work location options
-                        HStack(spacing: 12) {
-                            Button(action: {
-                                workDayManager.setWorkDay(date: date, status: .workFromOffice)
-                                isPresented = false
-                            }) {
-                                Label("Work From Office", systemImage: "building.2")
-                                    .frame(maxWidth: .infinity)
-                            }
-                            .buttonStyle(.borderedProminent)
-                            .tint(.blue)
-                            
-                            Button(action: {
-                                workDayManager.setWorkDay(date: date, status: .workFromHome)
-                                isPresented = false
-                            }) {
-                                Label("Work From Home", systemImage: "house")
-                                    .frame(maxWidth: .infinity)
-                            }
-                            .buttonStyle(.borderedProminent)
-                            .tint(.green)
-                        }
-                        
-                        // PTO toggle
-                        Button(action: {
-                            workDayManager.togglePTO(for: date)
-                            isPresented = false
-                        }) {
-                            Label(isPTOToggleText, systemImage: currentWorkDay?.isPTO == true ? "minus.circle" : "plus.circle")
-                                .frame(maxWidth: .infinity)
-                        }
-                        .buttonStyle(.bordered)
-                        .tint(.orange)
-                        
-                        // Clear status - prominently displayed
-                        Button(action: {
-                            workDayManager.setWorkDay(date: date, status: .unlogged)
-                            isPresented = false
-                        }) {
-                            Label("Clear Status", systemImage: "xmark.circle")
-                                .frame(maxWidth: .infinity)
-                        }
-                        .buttonStyle(.bordered)
-                        .tint(.red)
-                    }
-                    .padding(.horizontal)
-                    
-                    Spacer()
-                }
-            }
-            .padding()
-            .navigationTitle("Set Day Status")
-            .toolbar {
-                ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
-                        isPresented = false
-                    }
-                }
-            }
-        }
-        .presentationDetents([.medium])
     }
 }

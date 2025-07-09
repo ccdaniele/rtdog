@@ -25,26 +25,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Nothing yet
 
-## [1.0.5] - 2025-07-09
-
-### Added
-- Custom day selection sheet with improved UI and layout
-- Always-visible "Clear Status" option in red color for better visibility
-- Current day status display in sheet header
-- Icons for all day selection options (building, house, plus/minus, xmark)
-- Better organized button layout with proper spacing and colors
-
-### Changed
-- Replaced `confirmationDialog` with custom `DaySelectionSheet` to overcome button display limitations
-- Day selection dialog now shows full date (e.g., "Friday, July 11, 2025")
-- Improved visual hierarchy with better button styling and colors
-- Enhanced user experience with clearer current status indication
-
-### Fixed
-- "Clear Status" button now always visible and properly displayed
-- Resolved issue where Clear Status option was not appearing due to dialog button limitations
-- Fixed iOS-specific `navigationBarTitleDisplayMode` issue for proper macOS compatibility
-
 ## [1.0.4] - 2025-07-09
 
 ### Fixed
