@@ -42,15 +42,17 @@ A native macOS application for tracking your hybrid work schedule and ensuring c
 - **Banked Days**: Surplus WFO days that can be used later in the month
 
 ### 🔔 Interactive Notifications
-- **Scheduled Reminders**: Daily prompts at customizable times
+- **Scheduled Reminders**: Daily prompts at customizable times (enabled by default at 10:00 AM)
 - **Interactive Buttons**: "I worked from the Office" / "I worked from Home"
 - **Smart Context**: Shows remaining office days needed
+- **Calendar Integration**: Notification actions automatically update the calendar
 - **Customizable Schedule**: Set which days and times to receive notifications
+- **Prominent Access**: Dedicated orange "Notifications" button in main interface
 
 ### ⚙️ Settings & Customization
 - **Notification Preferences**: 
-  - Enable/disable notifications
-  - Set notification time (default: 4:30 PM)
+  - Enable/disable notifications (enabled by default)
+  - Set notification time (default: 10:00 AM)
   - Choose which days to receive notifications
 - **Weekend Configuration**: Customize which days are weekends
 - **Holiday Management**: Add/remove holidays and PTO days
@@ -59,7 +61,7 @@ A native macOS application for tracking your hybrid work schedule and ensuring c
 ## How to Use
 
 ### Basic Daily Logging
-1. **Today's Log**: Click "Log Today" button in main interface
+1. **Today's Log**: Click on today's date in the calendar
 2. **Past Days**: Navigate to previous months using arrow buttons
 3. **Any Date**: Click on any calendar day to set/modify its status
 4. **Recent Catch-up**: Use "Recent Days" button to quickly log past unlogged days
@@ -77,11 +79,16 @@ A native macOS application for tracking your hybrid work schedule and ensuring c
 - **Clear Status**: Remove any previously set status
 
 ### Settings Configuration
-1. Open settings via gear icon in top-right
-2. Configure notification preferences
-3. Set weekend days (default: Saturday, Sunday)
-4. Add holidays and PTO days
-5. All changes are saved automatically
+1. **General Settings**: Open settings via gear icon in top-right
+   - Set weekend days (default: Saturday, Sunday)
+   - Add holidays and PTO days
+   - All changes are saved automatically
+
+2. **Notification Settings**: Click the orange "Notifications" button for:
+   - Enable/disable notifications
+   - Set notification time and days
+   - Test notification functionality
+   - Auto-permission request and setup guidance
 
 ## Technical Features
 
@@ -89,6 +96,7 @@ A native macOS application for tracking your hybrid work schedule and ensuring c
 - **Local Storage**: All data stored securely on your Mac using UserDefaults
 - **Automatic Backup**: Settings and work logs persist between app launches
 - **JSON Encoding**: Robust data serialization for reliability
+- **Singleton Pattern**: Shared WorkDayManager ensures consistent state across UI and notifications
 
 ### Smart Calculations
 - **Working Days**: Automatically excludes weekends, holidays, and PTO
@@ -127,4 +135,4 @@ For issues or feature requests, please check the project repository or contact t
 
 ---
 
-**Note**: This application is designed for personal productivity tracking and is not affiliated with any specific company's attendance policies. Please ensure compliance with your organization's work-from-home guidelines. 
+**Disclaimer**: This application is a personal initiative by Datadog employees and is not an official Datadog product. Its sole purpose is to help you conscientiously track your in-office days and ensure good-faith compliance with RTO KPIs. This tool is explicitly not for "gaming" or cheating the system. Please ensure compliance with your organization's work-from-home guidelines. 

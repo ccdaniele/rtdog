@@ -9,7 +9,7 @@ struct AppSettings: Codable {
     var enableNotifications: Bool
     
     static let `default` = AppSettings(
-        notificationTime: Calendar.current.date(bySettingHour: 16, minute: 30, second: 0, of: Date()) ?? Date(),
+        notificationTime: Calendar.current.date(bySettingHour: 10, minute: 0, second: 0, of: Date()) ?? Date(),
         notificationDays: Set([2, 3, 4, 5, 6]), // Monday to Friday
         weekendDays: Set([1, 7]), // Sunday and Saturday
         holidays: Set<Date>(),

@@ -12,7 +12,7 @@ import UserNotifications
 struct ContentView: View {
     @StateObject private var workDayManager = WorkDayManager.shared
     @State private var showingSettings = false
-    @State private var showingQuickLog = false
+
     @State private var showingRecentDaysLog = false
     @State private var showingNotifications = false
     
@@ -34,16 +34,6 @@ struct ContentView: View {
                 
                 // Action buttons
                 HStack(spacing: 12) {
-                    Button(action: { showingQuickLog = true }) {
-                        VStack {
-                            Image(systemName: "plus.circle.fill")
-                                .font(.title2)
-                            Text("Log Today")
-                                .font(.caption)
-                        }
-                    }
-                    .buttonStyle(BorderedButtonStyle())
-                    
                     if hasRecentUnloggedDays {
                         Button(action: { showingRecentDaysLog = true }) {
                             VStack {
@@ -122,17 +112,7 @@ struct ContentView: View {
         .sheet(isPresented: $showingNotifications) {
             NotificationSettingsView(workDayManager: workDayManager)
         }
-        .confirmationDialog("Log work location for today", isPresented: $showingQuickLog) {
-            Button("I worked from the Office") {
-                workDayManager.setWorkDay(date: Date(), status: .workFromOffice)
-            }
-            
-            Button("I worked from Home") {
-                workDayManager.setWorkDay(date: Date(), status: .workFromHome)
-            }
-            
-            Button("Cancel", role: .cancel) { }
-        }
+
         .sheet(isPresented: $showingRecentDaysLog) {
             RecentDaysLogView(workDayManager: workDayManager, isPresented: $showingRecentDaysLog)
         }
