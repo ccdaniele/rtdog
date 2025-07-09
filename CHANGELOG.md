@@ -25,6 +25,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Nothing yet
 
+## [1.0.5] - 2025-07-09
+
+### Added
+- **Bulk Clear Functionality**: New "Clear Days" button in main calendar UI for bulk day status reset
+- Multi-day selection interface with visual feedback (red borders, checkmarks)
+- Clear mode header showing selection count and "Clear Selected" action button
+- Improved day selection workflow with better user experience
+
+### Fixed
+- SwiftUI `confirmationDialog` button limit issue that prevented "Clear Status" option from appearing
+- Individual day clearing now works through bulk clear interface instead of hidden dialog option
+
+### Changed
+- Enhanced calendar day interaction with clear mode vs normal mode behavior
+- Added visual indicators for selected days during bulk clear operation
+- Improved UI organization with conditional header displays
+
 ## [1.0.4] - 2025-07-09
 
 ### Fixed
@@ -36,7 +53,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - "Clear Status" option in day selection dialog is now always available instead of only when day has status
 - Month picker now properly handles month selection by setting to start of selected month
-- All calendar month calculations now use consistent start-of-month logic
+- All calendar navigation functions now use consistent start-of-month calculations
 
 ## [1.0.3] - 2025-07-09
 
@@ -56,59 +73,42 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.2] - 2025-07-09
 
 ### Fixed
-- Issue where the release script was not properly executing
-- Version management in automated release workflow
+- Settings window sizing and layout issues
+- Notification system functionality restored
+- Enhanced notification permission handling
+
+### Added
+- Test notification functionality for debugging
+- Improved logging system for troubleshooting
 
 ## [1.0.1] - 2025-07-09
 
-### Added
-- Test notification button in Settings for debugging notification issues
-- Enhanced logging system for better troubleshooting
-
 ### Fixed
-- Settings window sizing and layout issues - now properly sized (500x600) with centered content
-- Notification functionality not working - improved permission handling and scheduling
-- Settings window now uses GroupBox components for better organization
-- Notification manager now has proper error handling and detailed logging
+- Settings window now properly sizes and centers content
+- Notification system now works correctly with proper permission handling
+- Enhanced error handling and logging for notifications
 
-### Changed
-- Settings UI redesigned with better visual hierarchy and spacing
-- Improved notification initialization and permission checking
+### Added
+- Test notification button in Settings for debugging
+- Better UI organization with GroupBox components
+- Improved notification setup and error handling
 
-## [1.0.0] - 2025-07-08
+## [1.0.0] - 2025-07-09
 
 ### Added
 - Initial release of rtdog (Office Day Tracker)
 - Calendar view with month navigation
-- Work day tracking (office/home/PTO)
+- Work day tracking (Work From Office, Work From Home, PTO)
+- Quota calculation and summary
+- Settings panel with notification preferences
 - Notification system for work reminders
-- Settings panel for configuration
-- Weekend and holiday management
-- Monthly quota tracking and summary
-- Persistent data storage with UserDefaults
-- Complete project management setup with semantic versioning
-- Automated release workflow with build scripts
-- Professional documentation and contribution guidelines
+- Data persistence using UserDefaults
+- Modern SwiftUI interface optimized for macOS
 
-### Technical Implementation
-- Swift/SwiftUI macOS application
-- MVVM architecture with ObservableObject
-- Calendar integration with proper date handling
-- Local notification system with permission management
-- Settings persistence with Codable protocols
-- Comprehensive error handling and logging
-- Professional Git workflow with conventional commits
-
-## Version Format
-- **MAJOR.MINOR.PATCH** (e.g., 1.0.0)
-- **MAJOR**: Incompatible API changes or major feature overhauls
-- **MINOR**: New features that are backwards compatible
-- **PATCH**: Bug fixes and small improvements
-
-## Release Types
-- **Added**: New features
-- **Changed**: Changes to existing functionality
-- **Deprecated**: Soon-to-be removed features
-- **Removed**: Features removed in this version
-- **Fixed**: Bug fixes
-- **Security**: Security vulnerability fixes 
+### Features
+- **Calendar Interface**: Clean month view with day status indicators
+- **Work Status Tracking**: Easy selection of work location and PTO days
+- **Quota Management**: Automatic calculation of required office days
+- **Notifications**: Configurable reminders for work planning
+- **Settings**: Comprehensive preferences for all app features
+- **Data Persistence**: Reliable storage of work history and settings 
