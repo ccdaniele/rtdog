@@ -15,6 +15,7 @@ struct ContentView: View {
 
     @State private var showingRecentDaysLog = false
     @State private var showingNotifications = false
+    @State private var showingReports = false
     
     var body: some View {
         VStack(spacing: 20) {
@@ -57,6 +58,18 @@ struct ContentView: View {
                     }
                     .buttonStyle(BorderedProminentButtonStyle())
                     .tint(.orange)
+                    
+                    // Reports button with distinct color
+                    Button(action: { showingReports = true }) {
+                        VStack {
+                            Image(systemName: "doc.text")
+                                .font(.title2)
+                            Text("Reports")
+                                .font(.caption)
+                        }
+                    }
+                    .buttonStyle(BorderedProminentButtonStyle())
+                    .tint(.blue)
                     
                     Button(action: { showingSettings = true }) {
                         VStack {
@@ -112,7 +125,9 @@ struct ContentView: View {
         .sheet(isPresented: $showingNotifications) {
             NotificationSettingsView(workDayManager: workDayManager)
         }
-
+        .sheet(isPresented: $showingReports) {
+            ReportGeneratorView(workDayManager: workDayManager)
+        }
         .sheet(isPresented: $showingRecentDaysLog) {
             RecentDaysLogView(workDayManager: workDayManager, isPresented: $showingRecentDaysLog)
         }
