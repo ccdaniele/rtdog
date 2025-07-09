@@ -49,6 +49,19 @@ A native macOS application for tracking your hybrid work schedule and ensuring c
 - **Customizable Schedule**: Set which days and times to receive notifications
 - **Prominent Access**: Dedicated orange "Notifications" button in main interface
 
+### 📄 PDF Reporting System
+- **Comprehensive Reports**: Generate detailed work location reports with statistics
+- **Multiple Export Formats**: PDF, CSV, and Excel-compatible formats
+- **Date Range Selection**: Last Month, This Month, or Custom date range
+- **Professional PDF Layout**: App-branded reports with statistics and daily data
+- **Real-time Preview**: See statistics before generating reports
+- **Data Validation**: Prevents future dates, ensures valid date ranges
+- **Weekend Control**: Option to include/exclude weekends from reports
+- **Gap Detection**: Warnings for missing data periods (>1 week)
+- **Native File Dialog**: macOS-native save dialog for intuitive file management
+- **Statistics Dashboard**: Total days, office/home percentages, holidays/PTO breakdown
+- **Prominent Access**: Dedicated blue "Reports" button in main interface
+
 ### ⚙️ Settings & Customization
 - **Notification Preferences**: 
   - Enable/disable notifications (enabled by default)
@@ -89,6 +102,13 @@ A native macOS application for tracking your hybrid work schedule and ensuring c
    - Set notification time and days
    - Test notification functionality
    - Auto-permission request and setup guidance
+
+3. **PDF Reports**: Click the blue "Reports" button to:
+   - Select date range (Last Month, This Month, or Custom)
+   - Choose export format (PDF, CSV, or Excel)
+   - Preview statistics before generating
+   - Include/exclude weekends as needed
+   - Save reports using native macOS file dialog
 
 ## Technical Features
 

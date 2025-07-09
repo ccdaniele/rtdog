@@ -25,6 +25,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Nothing yet
 
+## [1.1.0] - 2025-07-09
+
+### Added
+- **📄 PDF Reporting Feature**: Complete work location reporting system with multiple export formats
+  - **Date Range Selection**: Last Month, This Month, or Custom date range with validation
+  - **PDF Generation**: Professional reports with app branding, statistics, and daily work data
+  - **CSV Export**: Structured data export with Date, Work Location, Weekend, Holiday, PTO columns
+  - **Excel Export**: Excel-compatible format for advanced data analysis
+  - **Native File Dialog**: macOS NSSavePanel for intuitive file saving experience
+  - **Statistics Dashboard**: Total days, office/home percentages, holidays/PTO breakdown
+  - **Data Validation**: Prevents future date selection, ensures start < end date
+  - **Weekend Control**: Option to include/exclude weekends from reports
+  - **Gap Detection**: Warns when data is missing for more than 1 week continuously
+  - **Report Preview**: Real-time preview of statistics before generation
+  - **Blue Reports Button**: Prominent button in main UI for easy access
+
+### Fixed
+- **macOS Compatibility**: Fixed PDF generation using NSGraphicsContext instead of UIKit
+- **SwiftUI Deprecation**: Updated onChange API calls for macOS compatibility
+- **Navigation Issues**: Removed iOS-specific navigationBarTitleDisplayMode
+
+### Technical
+- **Multi-page PDFs**: Automatic page breaks for large datasets
+- **File Type Support**: Proper UTType definitions for all export formats
+- **Error Handling**: Comprehensive error messages and user feedback
+- **Performance**: Efficient data processing for large date ranges
+
 ## [1.0.11] - 2025-07-09
 
 ### Changed
