@@ -29,12 +29,6 @@ struct CalendarView: View {
         }
     }
     
-    private var isPTOToggleText: String {
-        guard let date = selectedDate else { return "Mark as PTO/Holiday" }
-        let workDay = workDayManager.getWorkDay(for: date)
-        return workDay.isPTO ? "Remove PTO/Holiday" : "Mark as PTO/Holiday"
-    }
-    
     var body: some View {
         VStack {
             // Month navigation
@@ -117,33 +111,12 @@ struct CalendarView: View {
             }
             .padding(.horizontal)
         }
-        .confirmationDialog(dialogTitle, isPresented: $showingActionSheet) {
-            Button("Work From Office") {
-                if let date = selectedDate {
-                    workDayManager.setWorkDay(date: date, status: .workFromOffice)
-                }
-            }
-            
-            Button("Work From Home") {
-                if let date = selectedDate {
-                    workDayManager.setWorkDay(date: date, status: .workFromHome)
-                }
-            }
-            
-            Button(isPTOToggleText) {
-                if let date = selectedDate {
-                    workDayManager.togglePTO(for: date)
-                }
-            }
-            
-            // Always show Clear Status option
-            Button("Clear Status", role: .destructive) {
-                if let date = selectedDate {
-                    workDayManager.setWorkDay(date: date, status: .unlogged)
-                }
-            }
-            
-            Button("Cancel", role: .cancel) { }
+        .sheet(isPresented: $showingActionSheet) {
+            DaySelectionSheet(
+                selectedDate: selectedDate,
+                workDayManager: workDayManager,
+                isPresented: $showingActionSheet
+            )
         }
         .sheet(isPresented: $showingMonthPicker) {
             MonthPickerView(currentMonth: $workDayManager.currentMonth, isPresented: $showingMonthPicker)
@@ -406,5 +379,117 @@ struct MonthPickerView: View {
         let startOfMonth = calendar.dateInterval(of: .month, for: selectedDate)?.start ?? selectedDate
         currentMonth = calendar.startOfDay(for: startOfMonth)
         isPresented = false
+    }
+}
+
+struct DaySelectionSheet: View {
+    let selectedDate: Date?
+    let workDayManager: WorkDayManager
+    @Binding var isPresented: Bool
+    
+    private var dateFormatter: DateFormatter {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE, MMMM d, yyyy"
+        return formatter
+    }
+    
+    private var currentWorkDay: WorkDay? {
+        guard let date = selectedDate else { return nil }
+        return workDayManager.getWorkDay(for: date)
+    }
+    
+    private var isPTOToggleText: String {
+        guard let workDay = currentWorkDay else { return "Add PTO" }
+        return workDay.isPTO ? "Remove PTO" : "Add PTO"
+    }
+    
+    private var currentStatusText: String {
+        guard let workDay = currentWorkDay else { return "No status set" }
+        switch workDay.status {
+        case .workFromOffice:
+            return "Currently: Work From Office"
+        case .workFromHome:
+            return "Currently: Work From Home"
+        case .unlogged:
+            return "No status set"
+        case .notWorkingDay:
+            return "Currently: Not Working Day"
+        }
+    }
+    
+    var body: some View {
+        NavigationView {
+            VStack(spacing: 20) {
+                if let date = selectedDate {
+                    Text(dateFormatter.string(from: date))
+                        .font(.title2)
+                        .fontWeight(.semibold)
+                    
+                    Text(currentStatusText)
+                        .font(.subheadline)
+                        .foregroundColor(.secondary)
+                    
+                    VStack(spacing: 16) {
+                        // Work location options
+                        HStack(spacing: 12) {
+                            Button(action: {
+                                workDayManager.setWorkDay(date: date, status: .workFromOffice)
+                                isPresented = false
+                            }) {
+                                Label("Work From Office", systemImage: "building.2")
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(.blue)
+                            
+                            Button(action: {
+                                workDayManager.setWorkDay(date: date, status: .workFromHome)
+                                isPresented = false
+                            }) {
+                                Label("Work From Home", systemImage: "house")
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .tint(.green)
+                        }
+                        
+                        // PTO toggle
+                        Button(action: {
+                            workDayManager.togglePTO(for: date)
+                            isPresented = false
+                        }) {
+                            Label(isPTOToggleText, systemImage: currentWorkDay?.isPTO == true ? "minus.circle" : "plus.circle")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(.orange)
+                        
+                        // Clear status - prominently displayed
+                        Button(action: {
+                            workDayManager.setWorkDay(date: date, status: .unlogged)
+                            isPresented = false
+                        }) {
+                            Label("Clear Status", systemImage: "xmark.circle")
+                                .frame(maxWidth: .infinity)
+                        }
+                        .buttonStyle(.bordered)
+                        .tint(.red)
+                    }
+                    .padding(.horizontal)
+                    
+                    Spacer()
+                }
+            }
+            .padding()
+            .navigationTitle("Set Day Status")
+            .toolbar {
+                ToolbarItem(placement: .cancellationAction) {
+                    Button("Cancel") {
+                        isPresented = false
+                    }
+                }
+            }
+        }
+        .presentationDetents([.medium])
     }
 }
