@@ -25,6 +25,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Nothing yet
 
+## [1.0.8] - 2025-07-09
+
+### Added
+- **Auto-Permission Request**: App now automatically requests notification permissions on startup
+- **User-Friendly Permission Dialog**: Shows helpful guidance when notifications are disabled with option to open System Preferences
+- **Enhanced Debugging**: Added comprehensive Console-visible NSLog statements for notification troubleshooting
+- **Test Scheduled Button**: Added debugging button in Settings to test scheduled notifications
+- **Calendar Entitlement**: Added calendar access entitlement for improved notification scheduling
+
+### Fixed
+- **Notification Permission Handling**: Fixed permission request flow and status checking
+- **Scheduled Notification Logic**: Completely rewrote notification scheduling with improved date calculation
+- **UserNotifications Import**: Fixed missing import that prevented notification permission checking
+- **Weekly Notification Scheduling**: Implemented dual approach (immediate next occurrence + weekly repeating) for reliable scheduling
+
+### Changed
+- **Notification System**: Rewritten notification system with automatic permission management
+- **Permission Flow**: Streamlined user experience for enabling notifications with clear guidance
+- **Debug Logging**: Enhanced logging throughout notification system for better troubleshooting
+
+### Technical
+- Fixed compilation error with missing UserNotifications import in ContentView.swift
+- Improved notification scheduling algorithm with better date handling
+- Enhanced permission status checking with proper async handling
+
 ## [1.0.7] - 2025-07-09
 
 ### Added
