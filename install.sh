@@ -80,7 +80,7 @@ get_latest_release() {
     if command -v curl &> /dev/null; then
         local release_info=$(curl -s "$api_url")
         LATEST_VERSION=$(echo "$release_info" | grep '"tag_name"' | cut -d'"' -f4)
-        DOWNLOAD_URL=$(echo "$release_info" | grep '"browser_download_url"' | grep '\.zip' | cut -d'"' -f4)
+        DOWNLOAD_URL=$(echo "$release_info" | grep '"browser_download_url"' | grep '\.zip"' | head -1 | cut -d'"' -f4)
     else
         log_error "curl not found. Please install curl or download manually."
         exit 1
