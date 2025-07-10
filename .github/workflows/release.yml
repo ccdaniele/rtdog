@@ -1,0 +1,181 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: macos-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Xcode
+      uses: maxim-lobanov/setup-xcode@v1
+      with:
+        xcode-version: '15.4'
+        
+    - name: Get version from tag
+      id: get_version
+      run: |
+        echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+        echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        
+    - name: Build Release
+      run: |
+        # Create releases directory
+        mkdir -p releases
+        
+        # Build and archive
+        xcodebuild -project rtdog.xcodeproj \
+                   -scheme rtdog \
+                   -configuration Release \
+                   -destination 'platform=macOS' \
+                   archive \
+                   -archivePath "releases/rtdog-${{ steps.get_version.outputs.VERSION }}.xcarchive"
+        
+        # Create version-specific directory
+        mkdir -p "releases/v${{ steps.get_version.outputs.VERSION }}"
+        
+        # Copy app from archive
+        cp -R "releases/rtdog-${{ steps.get_version.outputs.VERSION }}.xcarchive/Products/Applications/rtdog.app" \
+              "releases/v${{ steps.get_version.outputs.VERSION }}/"
+        
+        # Create ZIP file
+        cd "releases/v${{ steps.get_version.outputs.VERSION }}"
+        zip -r "rtdog-${{ steps.get_version.outputs.VERSION }}.zip" rtdog.app
+        
+        # Generate checksums
+        shasum -a 256 "rtdog-${{ steps.get_version.outputs.VERSION }}.zip" > "rtdog-${{ steps.get_version.outputs.VERSION }}.zip.sha256"
+        
+        # Move back to root
+        cd ../..
+        
+    - name: Generate Release Notes
+      id: release_notes
+      run: |
+        # Extract release notes from CHANGELOG.md
+        VERSION="${{ steps.get_version.outputs.VERSION }}"
+        
+        # Find the section for this version in CHANGELOG.md
+        awk -v version="$VERSION" '
+        /^## \[.*\]/ {
+          if (found) exit
+          if (match($0, "\\[" version "\\]")) {
+            found = 1
+            next
+          }
+        }
+        found && /^## \[.*\]/ { exit }
+        found && !/^## \[.*\]/ { print }
+        ' CHANGELOG.md > release_notes.md
+        
+        # If no specific notes found, use default
+        if [ ! -s release_notes.md ]; then
+          echo "## What's Changed" > release_notes.md
+          echo "* Bug fixes and improvements" >> release_notes.md
+          echo "* See CHANGELOG.md for full details" >> release_notes.md
+        fi
+        
+        # Add download instructions
+        echo "" >> release_notes.md
+        echo "## 🚀 Quick Install" >> release_notes.md
+        echo "\`\`\`bash" >> release_notes.md
+        echo "curl -fsSL https://raw.githubusercontent.com/ccdaniele/rtdog/main/install.sh | bash" >> release_notes.md
+        echo "\`\`\`" >> release_notes.md
+        echo "" >> release_notes.md
+        echo "Or download the ZIP file below and extract to Applications folder." >> release_notes.md
+        echo "" >> release_notes.md
+        echo "## 📊 Features" >> release_notes.md
+        echo "- 📅 Visual calendar with work location tracking" >> release_notes.md
+        echo "- 📊 Monthly office day quota monitoring" >> release_notes.md
+        echo "- 🔔 Interactive notification reminders" >> release_notes.md
+        echo "- 📄 Generate PDF reports with statistics" >> release_notes.md
+        echo "- 🔒 Complete privacy - all data stored locally" >> release_notes.md
+        echo "" >> release_notes.md
+        echo "## 🔐 Security Note" >> release_notes.md
+        echo "This app is not signed with an Apple Developer certificate. When you first run it, macOS may show a security warning. Right-click the app and select \"Open\", then click \"Open\" in the dialog. The one-click installer handles this automatically." >> release_notes.md
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.get_version.outputs.TAG_NAME }}
+        name: "rtdog ${{ steps.get_version.outputs.TAG_NAME }}"
+        body_path: release_notes.md
+        files: |
+          releases/v${{ steps.get_version.outputs.VERSION }}/rtdog-${{ steps.get_version.outputs.VERSION }}.zip
+          releases/v${{ steps.get_version.outputs.VERSION }}/rtdog-${{ steps.get_version.outputs.VERSION }}.zip.sha256
+        draft: false
+        prerelease: false
+        
+    - name: Update Latest Release Info
+      run: |
+        # Create a simple JSON file with latest release info
+        cat > latest-release.json << EOF
+        {
+          "version": "${{ steps.get_version.outputs.VERSION }}",
+          "tag_name": "${{ steps.get_version.outputs.TAG_NAME }}",
+          "download_url": "https://github.com/ccdaniele/rtdog/releases/download/${{ steps.get_version.outputs.TAG_NAME }}/rtdog-${{ steps.get_version.outputs.VERSION }}.zip",
+          "published_at": "$(date -u +%Y-%m-%dT%H:%M:%SZ)",
+          "checksum": "$(cat releases/v${{ steps.get_version.outputs.VERSION }}/rtdog-${{ steps.get_version.outputs.VERSION }}.zip.sha256 | cut -d' ' -f1)"
+        }
+        EOF
+        
+        # Commit and push the latest release info
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add latest-release.json
+        git commit -m "Update latest release info to ${{ steps.get_version.outputs.TAG_NAME }}" || exit 0
+        git push origin main || exit 0
+        
+    - name: Post-Release Notification
+      run: |
+        echo "🎉 Release ${{ steps.get_version.outputs.TAG_NAME }} created successfully!"
+        echo "📦 Download: https://github.com/ccdaniele/rtdog/releases/latest"
+        echo "🚀 Install: curl -fsSL https://raw.githubusercontent.com/ccdaniele/rtdog/main/install.sh | bash"
+        echo "📄 Landing page: https://ccdaniele.github.io/rtdog/install.html"
+        
+  notify-slack:
+    needs: build-and-release
+    runs-on: ubuntu-latest
+    if: always() && needs.build-and-release.result == 'success'
+    
+    steps:
+    - name: Get version from tag
+      id: get_version
+      run: |
+        echo "VERSION=${GITHUB_REF#refs/tags/v}" >> $GITHUB_OUTPUT
+        echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        
+    - name: Send Slack notification
+      if: env.SLACK_WEBHOOK_URL != ''
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      run: |
+        curl -X POST -H 'Content-type: application/json' \
+          --data "{
+            \"text\": \"🐕 rtdog ${{ steps.get_version.outputs.TAG_NAME }} is now available!\",
+            \"attachments\": [{
+              \"color\": \"good\",
+              \"fields\": [{
+                \"title\": \"🚀 Quick Install\",
+                \"value\": \"\`\`\`curl -fsSL https://raw.githubusercontent.com/ccdaniele/rtdog/main/install.sh | bash\`\`\`\",
+                \"short\": false
+              }, {
+                \"title\": \"📦 Download\",
+                \"value\": \"https://github.com/ccdaniele/rtdog/releases/latest\",
+                \"short\": true
+              }, {
+                \"title\": \"📄 Info\",
+                \"value\": \"https://ccdaniele.github.io/rtdog/install.html\",
+                \"short\": true
+              }]
+            }]
+          }" \
+          $SLACK_WEBHOOK_URL || echo "Slack notification failed (webhook not configured)" 

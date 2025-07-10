@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rtdog - Office Day Tracker | Easy Installation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            color: white;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 1.3em;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .install-section {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .install-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin: 30px 0;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 15px 30px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #FF6B6B, #FF8E8E);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255,107,107,0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(45deg, #4ECDC4, #6DD5DB);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(78,205,196,0.3);
+        }
+
+        .btn-outline {
+            background: white;
+            color: #667eea;
+            border: 2px solid #667eea;
+        }
+
+        .btn-outline:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .installation-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin: 40px 0;
+        }
+
+        .method-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            border-left: 4px solid #667eea;
+        }
+
+        .method-card h3 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .method-card .step {
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .method-card .step:last-child {
+            border-bottom: none;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Monaco', 'Menlo', monospace;
+            font-size: 0.9em;
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .feature-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .system-requirements {
+            background: #e8f4f8;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 30px 0;
+        }
+
+        .system-requirements h3 {
+            color: #2c5282;
+            margin-bottom: 15px;
+        }
+
+        .security-note {
+            background: #fef5e7;
+            border: 1px solid #f6e05e;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+
+        .security-note h3 {
+            color: #d69e2e;
+            margin-bottom: 10px;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            opacity: 0.8;
+        }
+
+        .version-info {
+            background: #e6fffa;
+            border-left: 4px solid #4ECDC4;
+            padding: 15px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .install-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🐕 rtdog</h1>
+            <p>Office Day Tracker - Easy Installation</p>
+        </div>
+
+        <div class="main-content">
+            <div class="install-section">
+                <h2>Get Started in 30 Seconds</h2>
+                <p>Choose your preferred installation method:</p>
+                
+                <div class="install-buttons">
+                    <a href="#" class="btn btn-primary" onclick="copyInstallCommand()">
+                        🚀 One-Click Install
+                    </a>
+                    <a href="https://github.com/ccdaniele/rtdog/releases/latest" class="btn btn-secondary" target="_blank">
+                        📦 Download ZIP
+                    </a>
+                    <a href="https://github.com/ccdaniele/rtdog" class="btn btn-outline" target="_blank">
+                        🔍 View Source
+                    </a>
+                </div>
+            </div>
+
+            <div class="version-info">
+                <h3>📈 Latest Version: v1.1.3</h3>
+                <p>✨ New features: PDF reporting, CSV export, enhanced notifications</p>
+                <p>🔧 Bug fixes: Week-based calculation consistency</p>
+            </div>
+
+            <div class="installation-methods">
+                <div class="method-card">
+                    <h3>🎯 Method 1: One-Click Install (Recommended)</h3>
+                    <div class="step">1. Open Terminal</div>
+                    <div class="step">2. Copy and paste this command:</div>
+                    <div class="code-block" id="install-command">
+curl -fsSL https://raw.githubusercontent.com/ccdaniele/rtdog/main/install.sh | bash
+                    </div>
+                    <div class="step">3. Follow the prompts</div>
+                    <div class="step">4. Launch rtdog from Applications</div>
+                </div>
+
+                <div class="method-card">
+                    <h3>📦 Method 2: Manual Download</h3>
+                    <div class="step">1. Download the latest ZIP file</div>
+                    <div class="step">2. Extract rtdog.app from the ZIP</div>
+                    <div class="step">3. Move rtdog.app to your Applications folder</div>
+                    <div class="step">4. Right-click and select "Open" (first time only)</div>
+                </div>
+
+                <div class="method-card">
+                    <h3>🔧 Method 3: From Source</h3>
+                    <div class="step">1. Clone the repository</div>
+                    <div class="step">2. Open in Xcode</div>
+                    <div class="step">3. Build and run</div>
+                    <div class="step">4. For developers who want to customize</div>
+                </div>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">📅</div>
+                    <h3>Calendar Tracking</h3>
+                    <p>Visual calendar with work location logging</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3>Quota Monitoring</h3>
+                    <p>Track your monthly office day requirements</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔔</div>
+                    <h3>Smart Notifications</h3>
+                    <p>Interactive reminders with calendar integration</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📄</div>
+                    <h3>PDF Reports</h3>
+                    <p>Generate detailed reports with statistics</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Privacy First</h3>
+                    <p>All data stored locally on your Mac</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Native macOS</h3>
+                    <p>Built with SwiftUI for best performance</p>
+                </div>
+            </div>
+
+            <div class="system-requirements">
+                <h3>💻 System Requirements</h3>
+                <ul>
+                    <li>macOS 15.5 or later</li>
+                    <li>Apple Silicon (M1/M2/M3) or Intel Mac</li>
+                    <li>~10MB free disk space</li>
+                    <li>Notification permissions (optional)</li>
+                </ul>
+            </div>
+
+            <div class="security-note">
+                <h3>🔐 Security Information</h3>
+                <p>rtdog is not signed with an Apple Developer certificate. When you first run the app, macOS may show a security warning. This is normal for open-source applications.</p>
+                <p><strong>To run rtdog:</strong> Right-click the app and select "Open", then click "Open" in the dialog.</p>
+                <p>The one-click installer handles this automatically by removing the quarantine attribute.</p>
+            </div>
+
+            <div class="method-card">
+                <h3>🚨 Troubleshooting</h3>
+                <div class="step"><strong>App won't open:</strong> Right-click → Open, then click "Open" in the dialog</div>
+                <div class="step"><strong>Download failed:</strong> Check internet connection and try again</div>
+                <div class="step"><strong>Installation failed:</strong> Try the manual download method</div>
+                <div class="step"><strong>Need help:</strong> Check the <a href="https://github.com/ccdaniele/rtdog/issues" target="_blank">GitHub Issues</a> or create a new issue</div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>Made with ❤️ by Datadog employees, for Datadog employees</p>
+            <p>Not an official Datadog product • <a href="https://github.com/ccdaniele/rtdog" style="color: white;">View on GitHub</a></p>
+        </div>
+    </div>
+
+    <script>
+        function copyInstallCommand() {
+            const command = document.getElementById('install-command').textContent.trim();
+            navigator.clipboard.writeText(command).then(() => {
+                // Show success message
+                const btn = event.target;
+                const originalText = btn.textContent;
+                btn.textContent = '✅ Copied!';
+                btn.style.background = 'linear-gradient(45deg, #48BB78, #68D391)';
+                
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                    btn.style.background = 'linear-gradient(45deg, #FF6B6B, #FF8E8E)';
+                }, 2000);
+                
+                // Optional: Show instructions
+                alert('Command copied to clipboard!\n\nNext steps:\n1. Open Terminal\n2. Paste the command (Cmd+V)\n3. Press Enter\n4. Follow the installation prompts');
+            }).catch(err => {
+                console.error('Failed to copy: ', err);
+                alert('Please copy this command manually:\n\n' + command);
+            });
+        }
+
+        // Add some interactive elements
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.method-card, .feature-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px)';
+                    this.style.boxShadow = '0 10px 25px rgba(0,0,0,0.1)';
+                    this.style.transition = 'all 0.3s ease';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                    this.style.boxShadow = 'none';
+                });
+            });
+        });
+    </script>
+</body>
+</html> 
