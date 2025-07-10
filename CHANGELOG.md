@@ -25,6 +25,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Nothing yet
 
+## [1.1.1] - 2025-07-09
+
+### Changed
+- **Updated App Icons**: Refreshed all app icons (16x16 to 1024x1024) with latest rtdog.png design
+- **Visual Consistency**: All icon sizes now reflect the most current brand visual identity
+- **Icon Generation**: Regenerated complete icon set using macOS sips tool for optimal quality
+
+### Technical
+- Updated source rtdog.png file with new design
+- Regenerated all 11 required macOS app icon sizes including @2x retina variants
+- Maintained macOS native .icns format compatibility for all system integrations
+
 ## [1.1.0] - 2025-07-09
 
 ### Added

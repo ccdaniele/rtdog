@@ -13,9 +13,9 @@ struct ReportGeneratorView: View {
     @State private var includeWeekends = true
     @State private var selectedFormat: ExportFormat = .pdf
     @State private var isGenerating = false
-    @State private var showingFilePicker = false
     @State private var errorMessage: String?
     @State private var showingError = false
+    @State private var showingPermissionInfo = false
     
     enum ReportPeriod: String, CaseIterable {
         case lastMonth = "Last Month"
@@ -49,74 +49,51 @@ struct ReportGeneratorView: View {
         NavigationView {
             ScrollView {
                 VStack(alignment: .leading, spacing: 20) {
-                    // Header
-                    VStack(alignment: .leading, spacing: 8) {
-                        Text("Generate Work Report")
-                            .font(.title2)
-                            .fontWeight(.bold)
-                        
-                        Text("Create a detailed report of your work locations, statistics, and compliance data.")
-                            .font(.subheadline)
-                            .foregroundColor(.secondary)
-                    }
-                    
-                    // Period Selection
-                    GroupBox(label: Text("Report Period").font(.headline)) {
+                    // Report Settings
+                    GroupBox(label: Text("Report Settings").font(.headline)) {
                         VStack(alignment: .leading, spacing: 12) {
-                            Picker("Period", selection: $selectedPeriod) {
-                                ForEach(ReportPeriod.allCases, id: \.self) { period in
-                                    Text(period.rawValue).tag(period)
+                            HStack {
+                                Text("Time Period:")
+                                    .font(.subheadline)
+                                Spacer()
+                                Picker("Period", selection: $selectedPeriod) {
+                                    ForEach(ReportPeriod.allCases, id: \.self) { period in
+                                        Text(period.rawValue).tag(period)
+                                    }
                                 }
-                            }
-                            .pickerStyle(SegmentedPickerStyle())
-                            .onChange(of: selectedPeriod) { _, _ in
-                                updateDatesForPeriod()
+                                .pickerStyle(MenuPickerStyle())
+                                .onChange(of: selectedPeriod) { _, _ in
+                                    updateDatesForPeriod()
+                                }
                             }
                             
                             if selectedPeriod == .custom {
+                                Divider()
+                                
                                 VStack(alignment: .leading, spacing: 8) {
+                                    Text("Custom Date Range")
+                                        .font(.subheadline)
+                                        .fontWeight(.medium)
+                                    
                                     HStack {
-                                        VStack(alignment: .leading) {
-                                            Text("Start Date")
-                                                .font(.caption)
-                                                .foregroundColor(.secondary)
-                                            DatePicker("", selection: $startDate, in: ...Date(), displayedComponents: .date)
-                                                .labelsHidden()
-                                        }
-                                        
+                                        Text("Start Date:")
                                         Spacer()
-                                        
-                                        VStack(alignment: .leading) {
-                                            Text("End Date")
-                                                .font(.caption)
-                                                .foregroundColor(.secondary)
-                                            DatePicker("", selection: $endDate, in: startDate...Date(), displayedComponents: .date)
-                                                .labelsHidden()
-                                        }
+                                        DatePicker("", selection: $startDate, in: ...Date(), displayedComponents: .date)
+                                            .labelsHidden()
+                                            .datePickerStyle(CompactDatePickerStyle())
                                     }
                                     
-                                    if !isValidDateRange {
-                                        Text("⚠️ Start date must be before end date")
-                                            .font(.caption)
-                                            .foregroundColor(.red)
+                                    HStack {
+                                        Text("End Date:")
+                                        Spacer()
+                                        DatePicker("", selection: $endDate, in: startDate...Date(), displayedComponents: .date)
+                                            .labelsHidden()
+                                            .datePickerStyle(CompactDatePickerStyle())
                                     }
                                 }
-                            } else {
-                                HStack {
-                                    Text("From: \(formattedDate(currentStartDate))")
-                                    Spacer()
-                                    Text("To: \(formattedDate(currentEndDate))")
-                                }
-                                .font(.caption)
-                                .foregroundColor(.secondary)
                             }
-                        }
-                    }
-                    
-                    // Options
-                    GroupBox(label: Text("Report Options").font(.headline)) {
-                        VStack(alignment: .leading, spacing: 12) {
-                            Toggle("Include Weekends", isOn: $includeWeekends)
+                            
+                            Divider()
                             
                             HStack {
                                 Text("Export Format:")
@@ -128,63 +105,127 @@ struct ReportGeneratorView: View {
                                     }
                                 }
                                 .pickerStyle(MenuPickerStyle())
-                                .frame(width: 100)
                             }
+                            
+                            Toggle("Include Weekends", isOn: $includeWeekends)
                         }
+                        .padding()
                     }
                     
                     // Report Preview
-                    if let preview = generateReportPreview() {
-                        GroupBox(label: Text("Report Preview").font(.headline)) {
-                            VStack(alignment: .leading, spacing: 8) {
-                                HStack {
-                                    Text("Period:")
-                                    Spacer()
-                                    Text("\(formattedDate(currentStartDate)) - \(formattedDate(currentEndDate))")
-                                        .foregroundColor(.secondary)
+                    GroupBox(label: Text("Report Preview").font(.headline)) {
+                        if let preview = generateReportPreview() {
+                            VStack(alignment: .leading, spacing: 12) {
+                                Text("Report Summary")
+                                    .font(.subheadline)
+                                    .fontWeight(.medium)
+                                
+                                VStack(alignment: .leading, spacing: 4) {
+                                    HStack {
+                                        Text("Total Days:")
+                                        Spacer()
+                                        Text("\(preview.totalDays)")
+                                    }
+                                    
+                                    HStack {
+                                        Text("Office Days:")
+                                        Spacer()
+                                        Text("\(preview.officeDays) (\(String(format: "%.1f", preview.officePercentage))%)")
+                                    }
+                                    
+                                    HStack {
+                                        Text("Home Days:")
+                                        Spacer()
+                                        Text("\(preview.homeDays) (\(String(format: "%.1f", preview.homePercentage))%)")
+                                    }
+                                    
+                                    HStack {
+                                        Text("Holidays:")
+                                        Spacer()
+                                        Text("\(preview.holidays)")
+                                    }
+                                    
+                                    HStack {
+                                        Text("PTO Days:")
+                                        Spacer()
+                                        Text("\(preview.ptoDays)")
+                                    }
                                 }
+                                .font(.caption)
+                                .foregroundColor(.secondary)
                                 
                                 Divider()
                                 
+                                Text("Date Range: \(formattedDate(currentStartDate)) - \(formattedDate(currentEndDate))")
+                                    .font(.caption)
+                                    .foregroundColor(.secondary)
+                            }
+                        } else {
+                            Text("No data available for the selected period")
+                                .foregroundColor(.secondary)
+                                .italic()
+                        }
+                    }
+                    .padding()
+                    
+                    // Export Options
+                    GroupBox(label: Text("Export").font(.headline)) {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Generate your work location report in the selected format:")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            
+                            Button(action: generateReport) {
                                 HStack {
-                                    Text("Total Days:")
-                                    Spacer()
-                                    Text("\(preview.totalDays)")
-                                        .foregroundColor(.secondary)
+                                    Image(systemName: "doc.badge.arrow.up")
+                                    Text("Generate \(selectedFormat.rawValue) Report")
                                 }
-                                
-                                HStack {
-                                    Text("Office Days:")
-                                    Spacer()
-                                    Text("\(preview.officeDays) (\(preview.officePercentage)%)")
+                            }
+                            .buttonStyle(BorderedProminentButtonStyle())
+                            .frame(maxWidth: .infinity)
+                            .disabled(isGenerating || generateReportPreview() == nil)
+                            .help("Generate and save the report to your chosen location")
+                        }
+                        .padding()
+                    }
+                    
+                    // Information section
+                    GroupBox(label: Text("Information").font(.headline)) {
+                        VStack(alignment: .leading, spacing: 12) {
+                            Text("Reports include your work location for each day with comprehensive statistics.")
+                                .font(.subheadline)
+                                .foregroundColor(.secondary)
+                            
+                            Text("Export formats:")
+                                .font(.subheadline)
+                                .fontWeight(.medium)
+                            
+                            VStack(alignment: .leading, spacing: 4) {
+                                Text("• PDF: Professional report with app branding and statistics")
+                                Text("• CSV: Structured data for analysis and spreadsheet import")
+                                Text("• Excel: Excel-compatible format for advanced data manipulation")
+                            }
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                            .padding(.leading, 8)
+                            
+                            Divider()
+                                .padding(.vertical, 4)
+                            
+                            HStack {
+                                Image(systemName: "info.circle")
+                                    .foregroundColor(.blue)
+                                VStack(alignment: .leading, spacing: 2) {
+                                    Text("File Access")
+                                        .font(.caption)
+                                        .fontWeight(.medium)
+                                    Text("macOS will ask you to choose where to save your report. This is normal sandbox behavior to keep your data secure.")
+                                        .font(.caption)
                                         .foregroundColor(.secondary)
-                                }
-                                
-                                HStack {
-                                    Text("Home Days:")
-                                    Spacer()
-                                    Text("\(preview.homeDays) (\(preview.homePercentage)%)")
-                                        .foregroundColor(.secondary)
-                                }
-                                
-                                HStack {
-                                    Text("Holidays/PTO:")
-                                    Spacer()
-                                    Text("\(preview.holidayPtoDays) (\(preview.holidayPtoPercentage)%)")
-                                        .foregroundColor(.secondary)
-                                }
-                                
-                                if preview.hasLongGaps {
-                                    HStack {
-                                        Image(systemName: "exclamationmark.triangle.fill")
-                                            .foregroundColor(.orange)
-                                        Text("Contains periods with no data logged for more than 1 week")
-                                            .font(.caption)
-                                            .foregroundColor(.orange)
-                                    }
                                 }
                             }
                         }
+                        .padding()
                     }
                     
                     Spacer()
@@ -192,43 +233,34 @@ struct ReportGeneratorView: View {
                 .padding()
             }
             .navigationTitle("Reports")
+            .frame(minWidth: 500, minHeight: 600)
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button("Close") {
                         presentationMode.wrappedValue.dismiss()
                     }
                 }
-                
-                ToolbarItem(placement: .primaryAction) {
-                    Button("Generate Report") {
-                        generateReport()
-                    }
-                    .disabled(!canGenerateReport || isGenerating)
+            }
+            .alert("Error", isPresented: $showingError) {
+                Button("OK") { }
+            } message: {
+                Text(errorMessage ?? "An unknown error occurred")
+            }
+            .alert("File Access Permissions", isPresented: $showingPermissionInfo) {
+                Button("Got it!") {
+                    UserDefaults.standard.set(true, forKey: "ReportsPermissionInfoShown")
                 }
+            } message: {
+                Text("When you generate your first report, macOS will ask you to choose where to save it. This is normal - rtdog needs permission to save files to your chosen location. Your data stays private and secure on your Mac.")
             }
         }
         .onAppear {
             updateDatesForPeriod()
-        }
-        .alert("Error", isPresented: $showingError) {
-            Button("OK") { }
-        } message: {
-            Text(errorMessage ?? "An unknown error occurred")
-        }
-        .onChange(of: showingFilePicker) { _, showing in
-            if showing {
-                showSaveDialog()
-            }
+            checkFirstTimeUser()
         }
     }
     
-    private var isValidDateRange: Bool {
-        startDate <= endDate && endDate <= Date()
-    }
-    
-    private var canGenerateReport: Bool {
-        return isValidDateRange && !isGenerating
-    }
+    // MARK: - Helper Properties
     
     private var currentStartDate: Date {
         selectedPeriod == .custom ? startDate : periodStartDate
@@ -259,7 +291,7 @@ struct ReportGeneratorView: View {
         
         switch selectedPeriod {
         case .thisMonth:
-            return min(calendar.dateInterval(of: .month, for: now)?.end ?? now, now)
+            return calendar.dateInterval(of: .month, for: now)?.end ?? now
         case .lastMonth:
             let lastMonth = calendar.date(byAdding: .month, value: -1, to: now) ?? now
             return calendar.dateInterval(of: .month, for: lastMonth)?.end ?? now
@@ -270,11 +302,13 @@ struct ReportGeneratorView: View {
     
     private var defaultFilename: String {
         let formatter = DateFormatter()
-        formatter.dateFormat = "MMMM-yyyy"
-        
-        let dateString = formatter.string(from: currentStartDate)
-        return "rtdog-report-\(dateString).\(selectedFormat.fileExtension)"
+        formatter.dateFormat = "yyyy-MM-dd"
+        let startStr = formatter.string(from: currentStartDate)
+        let endStr = formatter.string(from: currentEndDate)
+        return "rtdog-report-\(startStr)-to-\(endStr).\(selectedFormat.fileExtension)"
     }
+    
+    // MARK: - Helper Methods
     
     private func updateDatesForPeriod() {
         if selectedPeriod != .custom {
@@ -283,14 +317,18 @@ struct ReportGeneratorView: View {
         }
     }
     
-    private func formattedDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        return formatter.string(from: date)
+    private func checkFirstTimeUser() {
+        if !UserDefaults.standard.bool(forKey: "ReportsPermissionInfoShown") {
+            // Show permission info after a brief delay to let the view settle
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                showingPermissionInfo = true
+            }
+        }
     }
     
     private func generateReportPreview() -> ReportPreview? {
         let data = generateReportData()
+        guard !data.isEmpty else { return nil }
         return ReportPreview(from: data, includeWeekends: includeWeekends)
     }
     
@@ -298,33 +336,45 @@ struct ReportGeneratorView: View {
         var reportDays: [ReportDay] = []
         let calendar = Calendar.current
         
+        print("DEBUG: generateReportData called")
+        print("DEBUG: Start date: \(currentStartDate)")
+        print("DEBUG: End date: \(currentEndDate)")
+        print("DEBUG: Include weekends: \(includeWeekends)")
+        
         var currentDate = currentStartDate
         while currentDate <= currentEndDate {
-            // Skip weekends if not included
-            if !includeWeekends && calendar.isDateInWeekend(currentDate) {
-                currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
-                continue
+            // Add the day to report if weekends are included OR if it's not a weekend
+            if includeWeekends || !calendar.isDateInWeekend(currentDate) {
+                let workDay = workDayManager.workDays[currentDate]
+                let reportDay = ReportDay(
+                    date: currentDate,
+                    workLocation: workDay?.status,
+                    isWeekend: calendar.isDateInWeekend(currentDate),
+                    isHoliday: workDay?.isHoliday ?? false,
+                    isPTO: workDay?.isPTO ?? false
+                )
+                reportDays.append(reportDay)
             }
             
-            let workDay = workDayManager.workDays[currentDate]
-            let reportDay = ReportDay(
-                date: currentDate,
-                workLocation: workDay?.status,
-                isWeekend: calendar.isDateInWeekend(currentDate),
-                isHoliday: workDay?.isHoliday ?? false,
-                isPTO: workDay?.isPTO ?? false
-            )
-            reportDays.append(reportDay)
-            
+            // Always increment the date by one day - this should only happen once per iteration
             currentDate = calendar.date(byAdding: .day, value: 1, to: currentDate) ?? currentDate
+        }
+        
+        print("DEBUG: Generated \(reportDays.count) report days")
+        if let firstDay = reportDays.first, let lastDay = reportDays.last {
+            print("DEBUG: Actual range: \(firstDay.date) to \(lastDay.date)")
         }
         
         return reportDays
     }
     
     private func generateReport() {
+        print("DEBUG: Generate report button pressed!")
+        print("DEBUG: Selected format: \(selectedFormat.rawValue)")
+        print("DEBUG: Date range: \(currentStartDate) to \(currentEndDate)")
+        
         isGenerating = true
-        showingFilePicker = true
+        showSaveDialog()
     }
     
     private func showSaveDialog() {
@@ -336,43 +386,70 @@ struct ReportGeneratorView: View {
         savePanel.title = "Save Report"
         savePanel.message = "Choose where to save your rtdog work report"
         
-        savePanel.begin { result in
+        // Get the key window for proper presentation
+        guard let window = NSApplication.shared.keyWindow else {
+            print("ERROR: No key window available for save panel")
             DispatchQueue.main.async {
-                self.showingFilePicker = false
+                self.isGenerating = false
+                self.errorMessage = "Unable to show save dialog. Please make sure the app window is active and try again."
+                self.showingError = true
+            }
+            return
+        }
+        
+        print("DEBUG: Showing save panel...")
+        savePanel.beginSheetModal(for: window) { result in
+            DispatchQueue.main.async {
+                print("DEBUG: Save panel completed with result: \(result.rawValue)")
+                self.isGenerating = false
                 
                 if result == .OK, let url = savePanel.url {
+                    print("DEBUG: User selected URL: \(url)")
                     self.saveReportToURL(url)
                 } else {
-                    self.isGenerating = false
+                    print("DEBUG: User cancelled save dialog")
                 }
             }
         }
     }
     
     private func saveReportToURL(_ url: URL) {
-        let reportData = generateReportData()
+        print("DEBUG: Starting to save report to: \(url)")
+        let data = generateReportData()
+        print("DEBUG: Generated \(data.count) report days")
         
         do {
             switch selectedFormat {
             case .pdf:
-                let pdfData = generatePDFReport(from: reportData)
+                print("DEBUG: Generating PDF report...")
+                let pdfData = generatePDFReport(from: data)
+                print("DEBUG: PDF data size: \(pdfData.count) bytes")
                 try pdfData.write(to: url)
-            case .csv:
-                let csvData = generateCSVReport(from: reportData)
+                print("DEBUG: PDF successfully saved to \(url)")
+            case .csv, .excel:
+                print("DEBUG: Generating CSV report...")
+                let csvData = generateCSVReport(from: data)
+                print("DEBUG: CSV data size: \(csvData.count) characters")
                 try csvData.write(to: url, atomically: true, encoding: .utf8)
-            case .excel:
-                // For now, we'll export as CSV and rename to xlsx
-                let csvData = generateCSVReport(from: reportData)
-                try csvData.write(to: url, atomically: true, encoding: .utf8)
+                print("DEBUG: CSV successfully saved to \(url)")
             }
             
-            isGenerating = false
-            presentationMode.wrappedValue.dismiss()
+            // Show success message
+            DispatchQueue.main.async {
+                // You could add a success alert here if desired
+                print("SUCCESS: Report saved successfully!")
+            }
             
         } catch {
-            errorMessage = "Failed to save report: \(error.localizedDescription)"
-            showingError = true
-            isGenerating = false
+            print("ERROR: Failed to save report: \(error)")
+            DispatchQueue.main.async {
+                if error.localizedDescription.contains("permission") || error.localizedDescription.contains("access") {
+                    self.errorMessage = "Permission denied. Please try saving to a different location like Documents or Desktop, or check your file permissions."
+                } else {
+                    self.errorMessage = "Failed to save report: \(error.localizedDescription)"
+                }
+                self.showingError = true
+            }
         }
     }
     
@@ -408,60 +485,58 @@ struct ReportGeneratorView: View {
         // Date range
         let dateRect = NSRect(x: 50, y: 692, width: 512, height: 20)
         let dateAttributes: [NSAttributedString.Key: Any] = [
-            .font: NSFont.systemFont(ofSize: 14),
+            .font: NSFont.systemFont(ofSize: 12),
             .foregroundColor: NSColor.gray
         ]
         "Period: \(formattedDate(currentStartDate)) - \(formattedDate(currentEndDate))".draw(in: dateRect, withAttributes: dateAttributes)
         
         // Statistics
-        var yPos = 642
-        let stats = [
-            "Total Days: \(preview.totalDays)",
-            "Office Days: \(preview.officeDays) (\(preview.officePercentage)%)",
-            "Home Days: \(preview.homeDays) (\(preview.homePercentage)%)",
-            "Holidays/PTO: \(preview.holidayPtoDays) (\(preview.holidayPtoPercentage)%)"
+        var yPosition: CGFloat = 642
+        let statAttributes: [NSAttributedString.Key: Any] = [
+            .font: NSFont.systemFont(ofSize: 14),
+            .foregroundColor: NSColor.black
         ]
         
-        let statAttributes: [NSAttributedString.Key: Any] = [
-            .font: NSFont.systemFont(ofSize: 12),
-            .foregroundColor: NSColor.black
+        let stats = [
+            "Total Days: \(preview.totalDays)",
+            "Office Days: \(preview.officeDays) (\(String(format: "%.1f", preview.officePercentage))%)",
+            "Home Days: \(preview.homeDays) (\(String(format: "%.1f", preview.homePercentage))%)",
+            "Holidays: \(preview.holidays)",
+            "PTO Days: \(preview.ptoDays)"
         ]
         
         for stat in stats {
-            let rect = NSRect(x: 50, y: yPos, width: 512, height: 20)
-            stat.draw(in: rect, withAttributes: statAttributes)
-            yPos -= 25
+            let statRect = NSRect(x: 50, y: yPosition, width: 512, height: 20)
+            stat.draw(in: statRect, withAttributes: statAttributes)
+            yPosition -= 25
         }
         
         // Daily data
-        yPos -= 30
-        let headerRect = NSRect(x: 50, y: yPos, width: 512, height: 20)
+        yPosition -= 20
+        let headerRect = NSRect(x: 50, y: yPosition, width: 512, height: 20)
         let headerAttributes: [NSAttributedString.Key: Any] = [
-            .font: NSFont.boldSystemFont(ofSize: 16),
+            .font: NSFont.boldSystemFont(ofSize: 14),
             .foregroundColor: NSColor.black
         ]
-        "Daily Work Locations".draw(in: headerRect, withAttributes: headerAttributes)
-        yPos -= 30
+        "Daily Work Data".draw(in: headerRect, withAttributes: headerAttributes)
+        yPosition -= 30
         
         let dayAttributes: [NSAttributedString.Key: Any] = [
             .font: NSFont.systemFont(ofSize: 10),
-            .foregroundColor: NSColor.darkGray
+            .foregroundColor: NSColor.black
         ]
         
         for day in data {
-            if yPos < 50 { // Start new page if needed
+            if yPosition < 50 { // Start new page if needed
                 pdfContext.endPDFPage()
                 pdfContext.beginPDFPage(nil)
-                yPos = 742
+                yPosition = 742
             }
             
-            let dateFormatter = DateFormatter()
-            dateFormatter.dateStyle = .medium
-            let dayText = "\(dateFormatter.string(from: day.date)): \(day.displayStatus)"
-            
-            let rect = NSRect(x: 50, y: yPos, width: 512, height: 15)
-            dayText.draw(in: rect, withAttributes: dayAttributes)
-            yPos -= 18
+            let dayRect = NSRect(x: 50, y: yPosition, width: 512, height: 15)
+            let dayText = "\(formattedDate(day.date)): \(day.displayStatus)"
+            dayText.draw(in: dayRect, withAttributes: dayAttributes)
+            yPosition -= 18
         }
         
         pdfContext.endPDFPage()
@@ -475,22 +550,27 @@ struct ReportGeneratorView: View {
     private func generateCSVReport(from data: [ReportDay]) -> String {
         var csv = "Date,Work Location,Weekend,Holiday,PTO\n"
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateStyle = .short
-        
         for day in data {
-            let date = dateFormatter.string(from: day.date)
+            let dateStr = formattedDate(day.date)
             let location = day.displayStatus
             let weekend = day.isWeekend ? "Yes" : "No"
             let holiday = day.isHoliday ? "Yes" : "No"
             let pto = day.isPTO ? "Yes" : "No"
             
-            csv += "\(date),\(location),\(weekend),\(holiday),\(pto)\n"
+            csv += "\(dateStr),\(location),\(weekend),\(holiday),\(pto)\n"
         }
         
         return csv
     }
+    
+    private func formattedDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        return formatter.string(from: date)
+    }
 }
+
+// MARK: - Supporting Types
 
 struct ReportDay {
     let date: Date
@@ -518,49 +598,30 @@ struct ReportPreview {
     let totalDays: Int
     let officeDays: Int
     let homeDays: Int
-    let holidayPtoDays: Int
-    let officePercentage: Int
-    let homePercentage: Int
-    let holidayPtoPercentage: Int
-    let hasLongGaps: Bool
+    let holidays: Int
+    let ptoDays: Int
     
-    init(from data: [ReportDay], includeWeekends: Bool) {
-        let relevantDays = includeWeekends ? data : data.filter { !$0.isWeekend }
-        
-        self.totalDays = relevantDays.count
-        self.officeDays = relevantDays.filter { $0.workLocation == .workFromOffice }.count
-        self.homeDays = relevantDays.filter { $0.workLocation == .workFromHome }.count
-        self.holidayPtoDays = relevantDays.filter { $0.isHoliday || $0.isPTO }.count
-        
-        if totalDays > 0 {
-            self.officePercentage = Int(round(Double(officeDays) / Double(totalDays) * 100))
-            self.homePercentage = Int(round(Double(homeDays) / Double(totalDays) * 100))
-            self.holidayPtoPercentage = Int(round(Double(holidayPtoDays) / Double(totalDays) * 100))
-        } else {
-            self.officePercentage = 0
-            self.homePercentage = 0
-            self.holidayPtoPercentage = 0
-        }
-        
-        // Check for gaps longer than 1 week
-        self.hasLongGaps = Self.hasLongDataGaps(in: data)
+    var officePercentage: Double {
+        totalDays > 0 ? Double(officeDays) / Double(totalDays) * 100 : 0
     }
     
-    private static func hasLongDataGaps(in data: [ReportDay]) -> Bool {
-        let workDays = data.filter { !$0.isWeekend }
-        var consecutiveEmptyDays = 0
+    var homePercentage: Double {
+        totalDays > 0 ? Double(homeDays) / Double(totalDays) * 100 : 0
+    }
+    
+    init(from data: [ReportDay], includeWeekends: Bool) {
+        let filteredData = includeWeekends ? data : data.filter { !$0.isWeekend }
         
-        for day in workDays {
-            if day.workLocation == nil && !day.isHoliday && !day.isPTO {
-                consecutiveEmptyDays += 1
-                if consecutiveEmptyDays > 5 { // More than 1 week of work days
-                    return true
-                }
-            } else {
-                consecutiveEmptyDays = 0
-            }
-        }
-        
-        return false
+        totalDays = filteredData.count
+        officeDays = filteredData.filter { $0.workLocation == .workFromOffice }.count
+        homeDays = filteredData.filter { $0.workLocation == .workFromHome }.count
+        holidays = filteredData.filter { $0.isHoliday }.count
+        ptoDays = filteredData.filter { $0.isPTO }.count
+    }
+}
+
+struct ReportGeneratorView_Previews: PreviewProvider {
+    static var previews: some View {
+        ReportGeneratorView(workDayManager: WorkDayManager.shared)
     }
 } 
