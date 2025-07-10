@@ -4,7 +4,7 @@
 # One-Click Installation Script for macOS
 # Usage: curl -fsSL https://raw.githubusercontent.com/ccdaniele/rtdog/main/install.sh | bash
 
-set -e
+# set -e  # Temporarily disabled for debugging
 
 # Colors for output
 RED='\033[0;31m'
@@ -254,7 +254,9 @@ main() {
     
     # Confirm installation
     # Check if running in non-interactive mode (piped)
+    echo "DEBUG: Testing stdin: [[ -t 0 ]]"
     if [[ -t 0 ]]; then
+        echo "DEBUG: stdin is interactive"
         read -p "Continue with installation? (y/N) " -n 1 -r
         echo
         if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -262,6 +264,7 @@ main() {
             exit 0
         fi
     else
+        echo "DEBUG: stdin is NOT interactive (piped)"
         log_info "Running in non-interactive mode, proceeding with installation..."
     fi
     
