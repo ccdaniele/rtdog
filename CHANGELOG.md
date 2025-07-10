@@ -25,6 +25,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Nothing yet
 
+## [1.1.2] - 2025-07-10
+
+### Fixed
+- **🚨 CRITICAL BUG FIX**: Fixed inconsistent week-based business day assignment between required and completed office days
+  - **Problem**: Required office days used week-based calculation, but completed office days used calendar-month calculation
+  - **Impact**: Cross-month weeks (e.g., July 28-Aug 1, 2025) were assigned to one month for requirements but counted in calendar months for completion
+  - **Example**: Week July 28-Aug 1 was assigned to July for requirements, but August 1 office days counted towards August instead of July
+  - **Solution**: Implemented consistent week-based calculation for both required and completed office days
+  - **Result**: If a week is assigned to a month, ALL aspects (required days, completed days, holidays, PTO) are now consistently attributed to that month
+
+### Technical Changes
+- **New Function**: `getCompletedOfficeDaysForMonth()` - uses same week-based logic as required days calculation
+- **Enhanced Function**: `getHolidayAndPTODaysInMonth()` - now uses week-based calculation for consistency with business day assignment
+- **Debug Helper**: Added `debugWeekAssignments()` function for troubleshooting week assignment logic
+- **Maintained Compatibility**: All existing week assignment rules preserved (Mon/Tue/Wed start = current month, Thu/Fri/Sat/Sun start = previous month)
+
 ## [1.1.1] - 2025-07-09
 
 ### Changed
