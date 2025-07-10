@@ -189,15 +189,23 @@ launch_app() {
     echo
     echo "rtdog has been installed to: $app_path"
     echo
-    read -p "Would you like to launch rtdog now? (y/N) " -n 1 -r
-    echo
     
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-        log_info "Launching rtdog..."
+    # Check if running in non-interactive mode (piped)
+    if [[ -t 0 ]]; then
+        read -p "Would you like to launch rtdog now? (y/N) " -n 1 -r
+        echo
+        
+        if [[ $REPLY =~ ^[Yy]$ ]]; then
+            log_info "Launching rtdog..."
+            open "$app_path"
+            log_success "rtdog launched! 🎉"
+        else
+            log_info "You can launch rtdog from your Applications folder or Spotlight"
+        fi
+    else
+        log_info "Auto-launching rtdog in non-interactive mode..."
         open "$app_path"
         log_success "rtdog launched! 🎉"
-    else
-        log_info "You can launch rtdog from your Applications folder or Spotlight"
     fi
 }
 
@@ -245,11 +253,16 @@ main() {
     echo
     
     # Confirm installation
-    read -p "Continue with installation? (y/N) " -n 1 -r
-    echo
-    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
-        log_info "Installation cancelled by user"
-        exit 0
+    # Check if running in non-interactive mode (piped)
+    if [[ -t 0 ]]; then
+        read -p "Continue with installation? (y/N) " -n 1 -r
+        echo
+        if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+            log_info "Installation cancelled by user"
+            exit 0
+        fi
+    else
+        log_info "Running in non-interactive mode, proceeding with installation..."
     fi
     
     # Run installation steps
