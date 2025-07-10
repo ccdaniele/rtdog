@@ -4,7 +4,7 @@
 # One-Click Installation Script for macOS
 # Usage: curl -fsSL https://raw.githubusercontent.com/ccdaniele/rtdog/main/install.sh | bash
 
-# set -e  # Temporarily disabled for debugging
+set -e
 
 # Colors for output
 RED='\033[0;31m'
@@ -80,7 +80,7 @@ get_latest_release() {
     if command -v curl &> /dev/null; then
         local release_info=$(curl -s "$api_url")
         LATEST_VERSION=$(echo "$release_info" | grep '"tag_name"' | cut -d'"' -f4)
-        DOWNLOAD_URL=$(echo "$release_info" | grep '"browser_download_url"' | grep '\.zip"' | head -1 | cut -d'"' -f4)
+        DOWNLOAD_URL=$(echo "$release_info" | grep '"browser_download_url"' | grep '\.zip"' | grep -v '\.sha256"' | head -1 | cut -d'"' -f4)
     else
         log_error "curl not found. Please install curl or download manually."
         exit 1
@@ -254,9 +254,7 @@ main() {
     
     # Confirm installation
     # Check if running in non-interactive mode (piped)
-    echo "DEBUG: Testing stdin: [[ -t 0 ]]"
     if [[ -t 0 ]]; then
-        echo "DEBUG: stdin is interactive"
         read -p "Continue with installation? (y/N) " -n 1 -r
         echo
         if [[ ! $REPLY =~ ^[Yy]$ ]]; then
@@ -264,7 +262,6 @@ main() {
             exit 0
         fi
     else
-        echo "DEBUG: stdin is NOT interactive (piped)"
         log_info "Running in non-interactive mode, proceeding with installation..."
     fi
     
