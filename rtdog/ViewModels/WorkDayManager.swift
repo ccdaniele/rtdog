@@ -107,18 +107,8 @@ class WorkDayManager: ObservableObject {
         let adjustedBusinessDays = totalBusinessDays - holidayAndPTODays
         let requiredOfficeDays = Int(Double(adjustedBusinessDays) * 0.6)
         
-        // Calculate completed office days and banked days
-        var completedOfficeDays = 0
-        let monthRange = calendar.range(of: .day, in: .month, for: month)!
-        
-        for day in 1...monthRange.count {
-            guard let date = calendar.date(byAdding: .day, value: day - 1, to: calendar.startOfDay(for: month)) else { continue }
-            
-            let workDay = getWorkDay(for: date)
-            if workDay.status == .workFromOffice {
-                completedOfficeDays += 1
-            }
-        }
+        // Calculate completed office days using week-based approach (consistent with required days)
+        let completedOfficeDays = getCompletedOfficeDaysForMonth(month)
         
         // Calculate banked days and remaining office days
         let bankedDays = max(0, completedOfficeDays - requiredOfficeDays)
@@ -220,21 +210,80 @@ class WorkDayManager: ObservableObject {
         return calendar.component(.month, from: midWeek)
     }
     
-    private func getHolidayAndPTODaysInMonth(_ month: Date) -> Int {
+    private func getCompletedOfficeDaysForMonth(_ targetMonth: Date) -> Int {
         let calendar = Calendar.current
-        let monthRange = calendar.range(of: .day, in: .month, for: month)!
+        let year = calendar.component(.year, from: targetMonth)
+        let monthNumber = calendar.component(.month, from: targetMonth)
+        
+        var completedOfficeDays = 0
+        
+        // Get all weeks that intersect with this month
+        let firstDayOfMonth = calendar.date(from: DateComponents(year: year, month: monthNumber, day: 1))!
+        let lastDayOfMonth = calendar.date(from: DateComponents(year: year, month: monthNumber + 1, day: 0))!
+        
+        // Find the Monday of the week containing the first day of the month
+        let firstWeekStart = getMonday(for: firstDayOfMonth)
+        
+        // Find the Monday of the week containing the last day of the month
+        let lastWeekStart = getMonday(for: lastDayOfMonth)
+        
+        // Iterate through each week that intersects with this month
+        var currentWeekStart = firstWeekStart
+        while currentWeekStart <= lastWeekStart {
+            let weekOwner = determineWeekOwner(weekStart: currentWeekStart, year: year)
+            
+            // Only count completed office days for weeks assigned to this month
+            if weekOwner == monthNumber {
+                // Count office days logged in this week (Monday to Friday)
+                for dayOffset in 0..<5 { // Monday to Friday
+                    let weekDate = calendar.date(byAdding: .day, value: dayOffset, to: currentWeekStart)!
+                    let workDay = getWorkDay(for: weekDate)
+                    if workDay.status == .workFromOffice {
+                        completedOfficeDays += 1
+                    }
+                }
+            }
+            
+            currentWeekStart = calendar.date(byAdding: .weekOfYear, value: 1, to: currentWeekStart)!
+        }
+        
+        return completedOfficeDays
+    }
+    
+    private func getHolidayAndPTODaysInMonth(_ targetMonth: Date) -> Int {
+        let calendar = Calendar.current
+        let year = calendar.component(.year, from: targetMonth)
+        let monthNumber = calendar.component(.month, from: targetMonth)
+        
         var holidayPTOCount = 0
         
-        for day in 1...monthRange.count {
-            guard let date = calendar.date(byAdding: .day, value: day - 1, to: calendar.startOfDay(for: month)) else { continue }
+        // Get all weeks that intersect with this month
+        let firstDayOfMonth = calendar.date(from: DateComponents(year: year, month: monthNumber, day: 1))!
+        let lastDayOfMonth = calendar.date(from: DateComponents(year: year, month: monthNumber + 1, day: 0))!
+        
+        // Find the Monday of the week containing the first day of the month
+        let firstWeekStart = getMonday(for: firstDayOfMonth)
+        
+        // Find the Monday of the week containing the last day of the month
+        let lastWeekStart = getMonday(for: lastDayOfMonth)
+        
+        // Iterate through each week that intersects with this month
+        var currentWeekStart = firstWeekStart
+        while currentWeekStart <= lastWeekStart {
+            let weekOwner = determineWeekOwner(weekStart: currentWeekStart, year: year)
             
-            // Only count holidays and PTO on business days (Monday-Friday)
-            let weekday = calendar.component(.weekday, from: date)
-            let isBusinessDay = weekday >= 2 && weekday <= 6 // Monday to Friday
-            
-            if isBusinessDay && (settings.isHoliday(date) || settings.isPTO(date)) {
-                holidayPTOCount += 1
+            // Only count holidays and PTO for weeks assigned to this month
+            if weekOwner == monthNumber {
+                // Count holidays and PTO in this week (Monday to Friday)
+                for dayOffset in 0..<5 { // Monday to Friday
+                    let weekDate = calendar.date(byAdding: .day, value: dayOffset, to: currentWeekStart)!
+                    if settings.isHoliday(weekDate) || settings.isPTO(weekDate) {
+                        holidayPTOCount += 1
+                    }
+                }
             }
+            
+            currentWeekStart = calendar.date(byAdding: .weekOfYear, value: 1, to: currentWeekStart)!
         }
         
         return holidayPTOCount
@@ -286,5 +335,40 @@ class WorkDayManager: ObservableObject {
         }
         
         return workingDays
+    }
+    
+    // MARK: - Debug Helper
+    
+    func debugWeekAssignments(for month: Date) -> String {
+        let calendar = Calendar.current
+        let year = calendar.component(.year, from: month)
+        let monthNumber = calendar.component(.month, from: month)
+        let monthName = DateFormatter().monthSymbols[monthNumber - 1]
+        
+        var debugInfo = "Week assignments for \(monthName) \(year):\n"
+        
+        // Get all weeks that intersect with this month
+        let firstDayOfMonth = calendar.date(from: DateComponents(year: year, month: monthNumber, day: 1))!
+        let lastDayOfMonth = calendar.date(from: DateComponents(year: year, month: monthNumber + 1, day: 0))!
+        
+        let firstWeekStart = getMonday(for: firstDayOfMonth)
+        let lastWeekStart = getMonday(for: lastDayOfMonth)
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM d"
+        
+        var currentWeekStart = firstWeekStart
+        while currentWeekStart <= lastWeekStart {
+            let weekEnd = calendar.date(byAdding: .day, value: 4, to: currentWeekStart)! // Friday
+            let weekOwner = determineWeekOwner(weekStart: currentWeekStart, year: year)
+            let ownerName = DateFormatter().monthSymbols[weekOwner - 1]
+            
+            debugInfo += "Week \(dateFormatter.string(from: currentWeekStart)) - \(dateFormatter.string(from: weekEnd)): "
+            debugInfo += "Assigned to \(ownerName)\(weekOwner == monthNumber ? " ✓" : "")\n"
+            
+            currentWeekStart = calendar.date(byAdding: .weekOfYear, value: 1, to: currentWeekStart)!
+        }
+        
+        return debugInfo
     }
 } 
