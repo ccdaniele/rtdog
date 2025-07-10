@@ -2,6 +2,48 @@
 
 A native macOS application for tracking your hybrid work schedule and ensuring compliance with your company's office day requirements.
 
+## 🚀 Installation
+
+### One-Click Install (Recommended)
+
+Simply run this command in your terminal to automatically download and install the latest version:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/ccdaniele/rtdog/main/install.sh | bash
+```
+
+The installer will:
+- ✅ Download the latest release from GitHub
+- ✅ Install to your Applications folder
+- ✅ Handle macOS security permissions automatically
+- ✅ Verify file integrity with SHA256 checksums
+- ✅ Launch the app when installation completes
+
+### Alternative Installation Methods
+
+#### Manual Download
+1. Visit the [latest release page](https://github.com/ccdaniele/rtdog/releases/latest)
+2. Download the `rtdog-[version].zip` file
+3. Extract and move `rtdog.app` to your Applications folder
+4. Right-click and select "Open" to bypass macOS security on first launch
+
+#### From Source
+1. Clone the repository: `git clone https://github.com/ccdaniele/rtdog.git`
+2. Open `rtdog.xcodeproj` in Xcode
+3. Build and run the project
+
+### System Requirements
+- **macOS 15.5 or later**
+- **Apple Silicon or Intel Mac**
+- **~10MB disk space**
+- **Notification permissions** (optional, for daily reminders)
+
+### First Launch
+After installation, rtdog will appear in your Applications folder and Launch Pad. The app will automatically:
+- Request notification permissions (recommended for daily reminders)
+- Set up default settings (notifications enabled at 10:00 AM)
+- Display the current month's calendar for immediate use
+
 ## Features
 
 ### 📅 Monthly Calendar View
