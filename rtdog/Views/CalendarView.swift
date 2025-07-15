@@ -1,5 +1,23 @@
 import SwiftUI
 
+// MARK: - Color Extensions for Dark Mode Support
+extension Color {
+    init(light: Color, dark: Color) {
+        // Use dynamic color that adapts to appearance
+        if #available(macOS 10.15, *) {
+            self = Color(NSColor(name: nil, dynamicProvider: { trait in
+                if trait.bestMatch(from: [.darkAqua, .aqua]) == .darkAqua {
+                    return NSColor(dark)
+                } else {
+                    return NSColor(light)
+                }
+            }))
+        } else {
+            self = light
+        }
+    }
+}
+
 struct CalendarView: View {
     @ObservedObject var workDayManager: WorkDayManager
     @State private var selectedDate: Date?
@@ -364,17 +382,34 @@ struct CalendarDayView: View {
             return Color.red.opacity(0.3)
         }
         
-        // Always show status colors regardless of month
+        // Always show status colors regardless of month with dark mode support
         switch workDay.effectiveStatus {
         case .workFromOffice:
-            return Color.blue.opacity(isCurrentMonth ? 0.3 : 0.2)
+            return officeBackgroundColor.opacity(isCurrentMonth ? 0.4 : 0.25)
         case .workFromHome:
-            return Color.green.opacity(isCurrentMonth ? 0.3 : 0.2)
+            return homeBackgroundColor.opacity(isCurrentMonth ? 0.4 : 0.25)
         case .notWorkingDay:
-            return Color.gray.opacity(isCurrentMonth ? 0.3 : 0.2)
+            return ptoBackgroundColor.opacity(isCurrentMonth ? 0.4 : 0.25)
         case .unlogged:
-            return isCurrentMonth ? Color.white : Color.gray.opacity(0.05)
+            return isCurrentMonth ? adaptiveUnloggedBackground : Color.clear
         }
+    }
+    
+    // Adaptive colors that work well in both light and dark mode
+    private var officeBackgroundColor: Color {
+        Color.blue
+    }
+    
+    private var homeBackgroundColor: Color {
+        Color.green
+    }
+    
+    private var ptoBackgroundColor: Color {
+        Color.secondary
+    }
+    
+    private var adaptiveUnloggedBackground: Color {
+        Color(NSColor.controlBackgroundColor)
     }
     
     private var textColor: Color {
@@ -386,14 +421,27 @@ struct CalendarDayView: View {
         
         switch workDay.effectiveStatus {
         case .workFromOffice:
-            return Color.blue.opacity(alpha)
+            return adaptiveOfficeTextColor.opacity(alpha)
         case .workFromHome:
-            return Color.green.opacity(alpha)
+            return adaptiveHomeTextColor.opacity(alpha)
         case .notWorkingDay:
-            return Color.gray.opacity(alpha)
+            return adaptivePTOTextColor.opacity(alpha)
         case .unlogged:
             return Color.primary.opacity(alpha)
         }
+    }
+    
+    // Adaptive text colors with better contrast for dark mode
+    private var adaptiveOfficeTextColor: Color {
+        Color(light: Color.blue.opacity(0.8), dark: Color.blue.opacity(0.9))
+    }
+    
+    private var adaptiveHomeTextColor: Color {
+        Color(light: Color.green.opacity(0.8), dark: Color.green.opacity(0.9))
+    }
+    
+    private var adaptivePTOTextColor: Color {
+        Color.secondary
     }
     
     var body: some View {
@@ -457,9 +505,9 @@ struct CalendarDayView: View {
     private var statusIndicatorColor: Color {
         switch workDay.status {
         case .workFromOffice:
-            return Color.blue
+            return officeBackgroundColor
         case .workFromHome:
-            return Color.green
+            return homeBackgroundColor
         default:
             return Color.clear
         }
@@ -509,7 +557,7 @@ struct MonthPickerView: View {
                                 }
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, 8)
-                                .background(Color.gray.opacity(0.1))
+                                .background(Color(NSColor.controlBackgroundColor))
                                 .cornerRadius(8)
                             }
                         }
