@@ -25,7 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Nothing yet
 
-## [1.1.4] - 2025-07-10
+## [1.1.5] - 2025-07-15
 
 ### Fixed
 - **🌙 Dark Mode Compatibility Issues**: Completely resolved calendar visibility problems in dark mode
