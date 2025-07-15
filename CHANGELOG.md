@@ -25,6 +25,45 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - Nothing yet
 
+## [1.1.4] - 2025-07-10
+
+### Fixed
+- **🌙 Dark Mode Compatibility Issues**: Completely resolved calendar visibility problems in dark mode
+  - **Calendar Day Numbers**: Fixed hard-coded white backgrounds that were invisible in dark mode
+  - **Text Contrast**: Improved calendar day number visibility with adaptive text colors
+  - **Background Colors**: Replaced static colors with system-adaptive colors using NSColor.dynamicProvider
+  - **Status Indicators**: Enhanced work status colors (Office/Home/Holiday/PTO) for proper dark mode contrast
+  - **Month Picker**: Fixed month selection background colors to use NSColor.controlBackgroundColor
+  - **User Experience**: Calendar is now fully usable and readable in both light and dark modes
+
+### Technical Improvements
+- **Color Extension**: Added `Color(light:dark:)` extension with NSColor.dynamicProvider for automatic appearance adaptation
+- **System Integration**: Used NSAppearance.bestMatch() for reliable dark mode detection
+- **Adaptive Colors**: Replaced hard-coded colors with system-adaptive alternatives throughout calendar interface
+- **Opacity Optimization**: Adjusted opacity values for better contrast in both appearance modes
+
+## [1.1.3] - 2025-07-10
+
+### Added
+- **📄 PDF Reporting Feature**: Complete work location reporting system with multiple export formats
+  - **Date Range Selection**: Last Month, This Month, or Custom date range with validation
+  - **PDF Generation**: Professional reports with app branding, statistics, and daily work data
+  - **CSV Export**: Structured data export with Date, Work Location, Weekend, Holiday, PTO columns
+  - **Excel Export**: Excel-compatible format for advanced data analysis
+  - **Native File Dialog**: macOS NSSavePanel for intuitive file saving experience
+  - **Statistics Dashboard**: Total days, office/home percentages, holidays/PTO breakdown
+  - **Data Validation**: Prevents future date selection, ensures start < end date
+  - **Weekend Control**: Option to include/exclude weekends from reports
+  - **Gap Detection**: Warns when more than 1 week of continuous data is missing
+  - **Blue Reports Button**: Prominent access in main UI alongside Settings/Notifications
+
+### Technical Implementation
+- **ReportGeneratorView**: New SwiftUI view with comprehensive reporting interface
+- **PDF Generation**: macOS-native NSGraphicsContext for high-quality PDF output
+- **CSV/Excel Support**: Structured data export with proper UTF-8 encoding
+- **File Type Support**: UTType definitions for PDF, CSV, and Excel formats
+- **macOS Integration**: Native NSSavePanel for file saving with proper content type validation
+
 ## [1.1.2] - 2025-07-10
 
 ### Fixed
