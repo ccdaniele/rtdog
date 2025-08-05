@@ -105,7 +105,7 @@ class WorkDayManager: ObservableObject {
         
         // Apply the formula: (A - B) * 0.6
         let adjustedBusinessDays = totalBusinessDays - holidayAndPTODays
-        let requiredOfficeDays = Int(Double(adjustedBusinessDays) * 0.6)
+        let requiredOfficeDays = Int(ceil(Double(adjustedBusinessDays) * 0.6))
         
         // Calculate completed office days using week-based approach (consistent with required days)
         let completedOfficeDays = getCompletedOfficeDaysForMonth(month)
