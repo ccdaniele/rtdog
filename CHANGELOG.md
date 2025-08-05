@@ -20,7 +20,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Nothing yet
 
 ### Fixed
-- Nothing yet
+- **🔢 Required Office Days Rounding**: Fixed calculation to round up fractional required office days instead of truncating
+  - **Problem**: 10.4 required days were being truncated to 10 days instead of rounding up to 11 days
+  - **Impact**: Users were not meeting the full 3-day/week office requirement when calculations resulted in fractional days
+  - **Solution**: Changed `Int(Double(adjustedBusinessDays) * 0.6)` to `Int(ceil(Double(adjustedBusinessDays) * 0.6))`
+  - **Result**: Any fractional day requirement now properly rounds up to ensure compliance with office day policies
 
 ### Security
 - Nothing yet
